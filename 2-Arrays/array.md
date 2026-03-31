@@ -1,693 +1,537 @@
-# Arrays in Java for DSA
+# Array Theory Notes
 
 ## 1. Array kya hota hai?
 
-Array ek linear data structure hota hai jo same type ke elements ko contiguous memory me store karta hai.
+Array ek linear data structure hota hai jisme same type ke multiple elements ko ek sequence me store kiya jaata hai. Har element ka ek fixed position hota hai jise index kehte hain. Java me indexing `0` se start hoti hai.
 
-Java examples:
+Simple words me:
+- array ek fixed-size container hota hai
+- isme similar type ka data store hota hai
+- har value ko direct index se access kiya ja sakta hai
 
-- `int[] arr = {1, 2, 3, 4, 5};`
-- `String[] names = {"Anil", "Raj", "Aman"};`
+## 2. Array ki sabse important properties
 
-Why arrays are important:
+- Array ka size fixed hota hai.
+- Elements contiguous logical order me arranged hote hain.
+- Random access fast hota hai.
+- Har element ka index hota hai.
+- Same data type ka rule follow hota hai.
+- Java me array object hota hai.
+- Array ka length banne ke baad change nahi hota.
 
-- fast index-based access
-- many data structures arrays ke concept par build hote hain
-- interviews me bohot common hain
-- sliding window, prefix sum, two pointers jaisi techniques mostly arrays par hi start hoti hain
+## 3. Java me array ka behavior
 
-## 2. Java me array declaration and initialization
+Java me array reference type hota hai, chahe uske andar primitive values hi kyon na ho. Matlab array khud ek object ki tarah treat hota hai.
 
-### Declaration
+Important points:
+- `arr.length` property hoti hai, method nahi
+- default values milti hain jab array `new` se banta hai
+- primitive arrays aur object arrays ka default behavior alag hota hai
 
-```java
-int[] arr;
-```
+Default values:
+- `int` array me default `0`
+- `double` array me default `0.0`
+- `boolean` array me default `false`
+- object array me default `null`
 
-### Memory allocation
+## 4. Array kyun important hai?
 
-```java
-arr = new int[5];
-```
+DSA ki bohot saari techniques arrays se hi start hoti hain. Array strong ho gaya to bahut saare topics automatically easy lagne lagte hain.
 
-### Declaration + allocation together
+Array important hai kyunki:
+- indexing fast hoti hai
+- searching, sorting aur traversal ka base yahi hai
+- sliding window, prefix sum, two pointers jaisi patterns arrays par hi most common hoti hain
+- strings ko bhi aksar character array logic se samjha ja sakta hai
+- matrix problems bhi 2D array ka extension hote hain
 
-```java
-int[] arr = new int[5];
-```
+## 5. Array aur memory intuition
 
-### Direct initialization
+Array ka main fayda hota hai direct access. Agar index pata hai to element tak instantly pahunch sakte ho. Isi wajah se array access theoretical level par `O(1)` hota hai.
 
-```java
-int[] arr = {10, 20, 30, 40, 50};
-```
+Lekin fixed-size hone ki wajah se:
+- beech me insert karna costly hota hai
+- beech se delete karna bhi costly hota hai
+- resize karne ke liye naya structure banana pad sakta hai
 
-### Default values in Java arrays
+## 6. Array operations ka theory
 
-Java me agar array `new` se banaya hai, to default values milti hain:
+### Access
 
-- `int` -> `0`
-- `boolean` -> `false`
-- `double` -> `0.0`
-- object references -> `null`
+Index se element dekhna sabse fast operation hai. Isme scanning nahi karni padti.
 
-Example:
+### Update
 
-```java
-int[] arr = new int[3];
-System.out.println(arr[0]); // 0
-```
+Kisi index par nayi value rakhna bhi fast hota hai kyunki direct position mil jaati hai.
 
-## 3. Traversal of array in Java
+### Traversal
 
-### Normal for loop
+Poore array ko left to right ya right to left dekhna traversal kehlata hai. Maximum basic array problems traversal par hi depend karti hain.
 
-```java
-int[] arr = {10, 20, 30, 40};
-for (int i = 0; i < arr.length; i++) {
-    System.out.print(arr[i] + " ");
-}
-```
+### Search
 
-### Enhanced for loop
+Agar array unsorted hai to linear search use hota hai. Agar sorted hai to binary search use kiya ja sakta hai.
 
-```java
-for (int x : arr) {
-    System.out.print(x + " ");
-}
-```
+### Insertion
 
-Time complexity:
+Fixed-size array me insertion ka matlab usually shift operation hota hai. End me jagah ho to easy hota hai, middle me costly.
 
+### Deletion
+
+Delete karne ke baad gap fill karne ke liye elements ko shift karna padta hai.
+
+## 7. Time complexity intuition
+
+- index access = `O(1)`
+- index update = `O(1)`
 - traversal = `O(n)`
+- linear search = `O(n)`
+- insertion at end with free space = `O(1)`
+- insertion in middle = `O(n)`
+- deletion in middle = `O(n)`
+- binary search on sorted array = `O(log n)`
 
-## 4. Important array properties in Java
+## 8. Array ke advantages
 
-- array ka size fixed hota hai
-- index `0` se start hota hai
-- last index `n - 1` hota hai
-- length nikalne ke liye `arr.length` use hota hai, `length()` nahi
+- direct index access fast hota hai
+- simple structure hai
+- memory overhead kam hota hai
+- primitives ko efficiently handle karta hai
+- sorting aur searching algorithms ka natural base hai
+- interview problems me bohot common hai
 
-Example:
+## 9. Array ke disadvantages
 
-```java
-int[] arr = {5, 6, 7};
-System.out.println(arr.length); // 3
-```
+- size fixed hota hai
+- insertion aur deletion expensive ho sakte hain
+- same type restriction hota hai
+- dynamic resizing naturally supported nahi hoti
+- middle operations ke liye best structure nahi hai
 
-## 5. Basic operations on arrays
-
-### 5.1 Access element
-
-```java
-int[] arr = {10, 20, 30};
-System.out.println(arr[1]); // 20
-```
-
-Time complexity:
-
-- `O(1)`
-
-### 5.2 Update element
-
-```java
-arr[1] = 99;
-```
-
-Time complexity:
-
-- `O(1)`
-
-### 5.3 Insert at a position in fixed-size array
-
-Fixed-size array me insertion ke liye right shift karna padta hai.
-
-```java
-public static int insertAtPosition(int[] arr, int n, int pos, int value) {
-    for (int i = n; i > pos; i--) {
-        arr[i] = arr[i - 1];
-    }
-    arr[pos] = value;
-    return n + 1;
-}
-```
-
-Time complexity:
-
-- beginning/middle = `O(n)`
-- end = `O(1)` if empty space exists
-
-### 5.4 Delete from a position
-
-```java
-public static int deleteAtPosition(int[] arr, int n, int pos) {
-    for (int i = pos; i < n - 1; i++) {
-        arr[i] = arr[i + 1];
-    }
-    return n - 1;
-}
-```
-
-Time complexity:
-
-- `O(n)`
-
-### 5.5 Linear search
-
-```java
-public static int linearSearch(int[] arr, int target) {
-    for (int i = 0; i < arr.length; i++) {
-        if (arr[i] == target) {
-            return i;
-        }
-    }
-    return -1;
-}
-```
-
-Time complexity:
-
-- best = `O(1)`
-- worst = `O(n)`
-
-## 6. Java arrays vs ArrayList
+## 10. Array vs ArrayList
 
 ### Array
 
 - fixed size
-- primitive types directly store kar sakta hai
-- faster and lightweight hota hai
+- primitive values directly store kar sakta hai
+- lightweight hota hai
+- low-level DSA understanding ke liye best hota hai
 
 ### ArrayList
 
 - dynamic size
-- insert/delete easier hota hai from API side
-- wrapper classes use hoti hain like `Integer`
+- built-in methods zyada convenient hoti hain
+- primitive values ke liye wrapper types lagte hain
+- practical app code me convenient hota hai
 
-Example:
+Interview point:
+ArrayList use karna alag cheez hai, lekin array logic samajhna core cheez hai.
 
-```java
-java.util.ArrayList<Integer> list = new java.util.ArrayList<>();
-list.add(10);
-list.add(20);
-```
+## 11. 1D array aur 2D array
 
-Interview note:
+### 1D Array
 
-- DSA me low-level array logic samajhne ke liye array important hai
-- practical coding me kabhi kabhi `ArrayList` easier hota hai
+Ek straight sequence hota hai jisme sirf ek index se element access hota hai.
 
-## 7. Common array patterns in DSA
+### 2D Array
 
-## 7.1 Two pointers
+Rows aur columns ka structure hota hai. Matrix, board, grid, game state, path problems me use hota hai.
 
-Use cases:
+2D arrays samajhte waqt:
+- row count
+- column count
+- boundary handling
+- nested loops
 
+bahut important hote hain.
+
+## 12. Array traversal ke thought patterns
+
+Traversal sirf ek loop chalana nahi hota. Problem ke hisaab se alag direction aur style use hoti hai:
+
+- left to right
+- right to left
+- two-end traversal
+- partial traversal
+- nested traversal
+- layer-wise traversal in matrix
+
+## 13. Array problems solve karte waqt basic questions
+
+Har problem me pehle ye sochna chahiye:
+
+- array sorted hai ya unsorted?
+- duplicates allowed hain ya nahi?
+- negative values ho sakti hain ya nahi?
+- fixed length subarray chahiye ya variable length?
+- answer index me chahiye, value me chahiye, ya count me?
+- in-place solution chahiye ya extra space allowed hai?
+- contiguous subarray ki baat ho rahi hai ya subset ki?
+
+Ye questions pattern identify karne me help karte hain.
+
+## 14. Common array patterns
+
+## 14.1 Two Pointers
+
+Jab do positions ko saath me track karna hota hai tab two pointers useful hota hai.
+
+Typical use:
 - reverse array
-- move zeros
+- sorted array me pair search
 - remove duplicates
-- two sum in sorted array
+- move zeros
+- container type problems
 
-Example: reverse array
+Idea:
+- ek pointer start par
+- ek pointer end par ya ek fast aur ek slow
 
-```java
-public static void reverseArray(int[] arr) {
-    int left = 0;
-    int right = arr.length - 1;
+## 14.2 Sliding Window
 
-    while (left < right) {
-        int temp = arr[left];
-        arr[left] = arr[right];
-        arr[right] = temp;
-        left++;
-        right--;
-    }
-}
-```
+Jab contiguous subarray ya substring ke upar kaam ho, sliding window bahut useful hoti hai.
 
-Time complexity:
+Do types:
+- fixed-size window
+- variable-size window
 
-- `O(n)`
+Typical use:
+- max sum of size `k`
+- longest/shortest valid subarray
+- stock, streak, and range-based problems
 
-## 7.2 Sliding window
+## 14.3 Prefix Sum
 
-Contiguous subarray problems me useful hota hai.
+Prefix sum tab powerful hota hai jab repeated range sum ya subarray sum se related questions aate hain.
 
-Example: maximum sum of subarray of size `k`
+Idea:
+- har position tak ka cumulative sum maintain karo
+- range queries fast ho jaati hain
 
-```java
-public static int maxSumSubarray(int[] arr, int k) {
-    int windowSum = 0;
+Typical use:
+- range sum
+- subarray sum equals k
+- cumulative frequency style reasoning
 
-    for (int i = 0; i < k; i++) {
-        windowSum += arr[i];
-    }
+## 14.4 Hashing with Array Problems
 
-    int maxSum = windowSum;
+Jab fast lookup chahiye hota hai tab `HashMap` ya `HashSet` array ke saath combine kiye jaate hain.
 
-    for (int i = k; i < arr.length; i++) {
-        windowSum += arr[i] - arr[i - k];
-        maxSum = Math.max(maxSum, windowSum);
-    }
+Typical use:
+- two sum
+- duplicate detection
+- prefix sum frequency
+- longest subarray conditions
 
-    return maxSum;
-}
-```
+## 14.5 Sorting Based Approach
 
-Time complexity:
+Kayi problems me original array ko sort karke problem easy ho jaati hai.
 
-- `O(n)`
+Sorting helpful hoti hai jab:
+- intervals merge karne ho
+- duplicates group karne ho
+- kth element sochna ho
+- binary search apply karna ho
 
-## 7.3 Prefix sum
+Tradeoff:
+- order change ho sakta hai
+- time `O(n log n)` lag sakta hai
 
-Range sum queries fast karne ke liye use hota hai.
+## 14.6 Binary Search on Array
 
-Definition:
+Binary search sirf simple sorted search ke liye nahi hoti. Ye answer-space search me bhi use hoti hai.
 
-- `prefix[i] = sum of elements from 0 to i`
+Binary search useful hoti hai jab:
+- array sorted ho
+- monotonic condition ho
+- rotated sorted array ho
+- minimum/maximum feasible answer dhoondhna ho
 
-```java
-public static int[] buildPrefix(int[] arr) {
-    int n = arr.length;
-    int[] prefix = new int[n];
-    prefix[0] = arr[0];
+## 14.7 Greedy on Array
 
-    for (int i = 1; i < n; i++) {
-        prefix[i] = prefix[i - 1] + arr[i];
-    }
+Kabhi-kabhi best local decision se overall answer mil jaata hai.
 
-    return prefix;
-}
-```
+Typical use:
+- jump game
+- stock profit
+- interval scheduling variants
 
-Range sum from `l` to `r`:
+## 14.8 Matrix / 2D Array
 
-```java
-int sum = prefix[r] - (l > 0 ? prefix[l - 1] : 0);
-```
+2D arrays me boundary control sabse important hota hai.
 
-Time complexity:
+Typical concepts:
+- row-column traversal
+- transpose
+- rotation
+- spiral traversal
+- zero-marking
+- neighbor-based simulation
 
-- build prefix = `O(n)`
-- query = `O(1)`
+## 15. Contiguous subarray vs subset
 
-## 7.4 Difference array
+Ye confusion bahut common hota hai.
 
-Range update problems me useful hota hai.
+### Contiguous Subarray
 
-```java
-public static void rangeUpdate(int[] diff, int l, int r, int val) {
-    diff[l] += val;
-    if (r + 1 < diff.length) {
-        diff[r + 1] -= val;
-    }
-}
-```
+Elements continuous honge. Beech me gap allowed nahi hota.
 
-Rebuild final array:
+### Subset / Subsequence type thinking
 
-```java
-for (int i = 1; i < diff.length; i++) {
-    diff[i] += diff[i - 1];
-}
-```
+Elements skip kiye ja sakte hain.
 
-Time complexity:
+Array problems me jab "subarray" likha ho to contiguous hi maana jaata hai.
 
-- one update = `O(1)`
-- final rebuild = `O(n)`
+## 16. Sorted array aur unsorted array difference
 
-## 7.5 Hashing with arrays
+### Sorted array me kya extra power milti hai?
 
-Agar values ya characters fixed range me ho, to array as frequency table use kar sakte ho.
-
-Example:
-
-```java
-int[] freq = new int[101];
-for (int x : arr) {
-    freq[x]++;
-}
-```
-
-## 8. Common interview problems in Java arrays
-
-## 8.1 Reverse an array
-
-Approach:
-
+- binary search
 - two pointers
-- first aur last element swap karte jao
+- duplicate compression
+- interval-like merge logic
 
-```java
-public static void reverse(int[] arr) {
-    int left = 0;
-    int right = arr.length - 1;
+### Unsorted array me kya hota hai?
 
-    while (left < right) {
-        int temp = arr[left];
-        arr[left] = arr[right];
-        arr[right] = temp;
-        left++;
-        right--;
-    }
-}
-```
+- usually hashing ya full traversal chahiye hota hai
+- binary search directly apply nahi hoti
+- order ka importance zyada hota hai
 
-## 8.2 Find max and min
+## 17. In-place operation ka matlab
 
-```java
-public static void printMaxMin(int[] arr) {
-    int maxi = arr[0];
-    int mini = arr[0];
+In-place ka matlab hota hai ki problem ko same array me solve karna, minimal extra space ke saath.
 
-    for (int x : arr) {
-        maxi = Math.max(maxi, x);
-        mini = Math.min(mini, x);
-    }
+In-place operations examples:
+- reverse
+- rotate
+- swap based rearrangement
+- Dutch National Flag
+- cyclic placement
 
-    System.out.println("Max = " + maxi);
-    System.out.println("Min = " + mini);
-}
-```
+In-place useful hota hai kyunki:
+- memory bachta hai
+- interview me efficient maana jaata hai
 
-Time complexity:
+## 18. Stable aur unstable behavior
 
-- `O(n)`
+Array transformations me kabhi-kabhi relative order matter karta hai.
 
-## 8.3 Move zeros to end
+### Stable operation
 
-```java
-public static void moveZeros(int[] arr) {
-    int j = 0;
+Equal ya existing order preserve rahe.
 
-    for (int i = 0; i < arr.length; i++) {
-        if (arr[i] != 0) {
-            int temp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = temp;
-            j++;
-        }
-    }
-}
-```
+### Unstable operation
 
-Time complexity:
+Order change ho sakta hai.
 
-- `O(n)`
+Example thinking:
+- move zeros to end stable bhi ho sakta hai
+- sort ya swaps order change kar sakte hain
 
-## 8.4 Two Sum
+## 19. Frequency array concept
 
-Approach:
-
-- use `HashMap`
-- for each element, check if `target - arr[i]` already exists
-
-```java
-public static int[] twoSum(int[] nums, int target) {
-    java.util.HashMap<Integer, Integer> map = new java.util.HashMap<>();
-
-    for (int i = 0; i < nums.length; i++) {
-        int need = target - nums[i];
-        if (map.containsKey(need)) {
-            return new int[]{map.get(need), i};
-        }
-        map.put(nums[i], i);
-    }
-
-    return new int[]{};
-}
-```
-
-Time complexity:
-
-- `O(n)`
-
-## 8.5 Best time to buy and sell stock
-
-```java
-public static int maxProfit(int[] prices) {
-    int minPrice = Integer.MAX_VALUE;
-    int profit = 0;
-
-    for (int price : prices) {
-        minPrice = Math.min(minPrice, price);
-        profit = Math.max(profit, price - minPrice);
-    }
-
-    return profit;
-}
-```
-
-Time complexity:
-
-- `O(n)`
-
-## 8.6 Merge two sorted arrays
-
-```java
-public static int[] mergeSorted(int[] a, int[] b) {
-    int i = 0, j = 0, k = 0;
-    int[] ans = new int[a.length + b.length];
-
-    while (i < a.length && j < b.length) {
-        if (a[i] <= b[j]) {
-            ans[k++] = a[i++];
-        } else {
-            ans[k++] = b[j++];
-        }
-    }
-
-    while (i < a.length) {
-        ans[k++] = a[i++];
-    }
-
-    while (j < b.length) {
-        ans[k++] = b[j++];
-    }
-
-    return ans;
-}
-```
-
-Time complexity:
-
-- `O(n + m)`
-
-## 8.7 Find duplicate number using hashing
-
-```java
-public static int findDuplicate(int[] nums) {
-    java.util.HashSet<Integer> seen = new java.util.HashSet<>();
-
-    for (int x : nums) {
-        if (seen.contains(x)) {
-            return x;
-        }
-        seen.add(x);
-    }
-
-    return -1;
-}
-```
-
-Time complexity:
-
-- `O(n)`
-
-## 8.8 Subarray sum equals K
-
-```java
-public static int subarraySum(int[] nums, int k) {
-    java.util.HashMap<Integer, Integer> map = new java.util.HashMap<>();
-    map.put(0, 1);
-
-    int sum = 0;
-    int count = 0;
-
-    for (int x : nums) {
-        sum += x;
-        if (map.containsKey(sum - k)) {
-            count += map.get(sum - k);
-        }
-        map.put(sum, map.getOrDefault(sum, 0) + 1);
-    }
-
-    return count;
-}
-```
-
-Time complexity:
-
-- `O(n)`
-
-## 9. Binary search on arrays
-
-Binary search sorted array par apply hoti hai.
-
-```java
-public static int binarySearch(int[] arr, int target) {
-    int left = 0;
-    int right = arr.length - 1;
-
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-
-        if (arr[mid] == target) {
-            return mid;
-        } else if (arr[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-    }
-
-    return -1;
-}
-```
-
-Time complexity:
-
-- `O(log n)`
-
-## 10. 2D arrays in Java
-
-Declaration:
-
-```java
-int[][] matrix = new int[3][4];
-```
-
-Initialization:
-
-```java
-int[][] matrix = {
-    {1, 2, 3},
-    {4, 5, 6},
-    {7, 8, 9}
-};
-```
-
-Traversal:
-
-```java
-for (int i = 0; i < matrix.length; i++) {
-    for (int j = 0; j < matrix[i].length; j++) {
-        System.out.print(matrix[i][j] + " ");
-    }
-    System.out.println();
-}
-```
+Jab values ka range chhota aur fixed ho, tab frequency array bohot useful hota hai.
 
 Use cases:
+- counting occurrences
+- duplicate checks
+- counting sort intuition
+- character counting
 
-- matrices
-- grid problems
-- graph representation
+Restriction:
+- value range manageable hona chahiye
 
-## 11. Important Java array utilities
+## 20. Difference array concept
 
-### `Arrays.sort()`
+Difference array range update problems ke liye ek advanced but important idea hai.
 
-```java
-import java.util.Arrays;
+Isme individual updates ke bajay boundary markers use karte hain. Baad me cumulative processing se final values milti hain.
 
-int[] arr = {4, 1, 3, 2};
-Arrays.sort(arr);
-```
+Useful when:
+- bohot saare range increments/decrements hon
+- final array ek baar me reconstruct karna ho
 
-### `Arrays.toString()`
+## 21. Kadane's Algorithm
 
-```java
-System.out.println(Arrays.toString(arr));
-```
+Ye array theory ka iconic concept hai.
 
-### `Arrays.fill()`
+Use:
+- maximum subarray sum
 
-```java
-Arrays.fill(arr, 0);
-```
+Core idea:
+- negative running sum ko carry karna bekaar ho sakta hai
+- better hota hai naya start lena
 
-## 12. Common mistakes in Java arrays
+Ye batata hai ki har subarray problem brute force se nahi karni hoti; running state se optimize kiya ja sakta hai.
 
-### Using `length()` instead of `length`
+## 22. Rotation concept
 
-Wrong:
+Array rotation left ya right dono direction me ho sakti hai.
 
-```java
-arr.length()
-```
+Important points:
+- `k` ko length ke modulo se reduce karte hain
+- cyclic movement samajhna padta hai
+- rotation problems me reverse technique, extra array, ya cyclic replacement aa sakta hai
 
-Correct:
+## 23. Duplicate handling
 
-```java
-arr.length
-```
+Arrays me duplicates bahut important effect daalte hain.
 
-### Index out of bounds
+Problem me pehle clear karo:
+- duplicates allowed hain?
+- duplicates count karne hain ya ignore?
+- unique answer chahiye?
 
-Valid indices:
+Ye especially important hota hai:
+- 3Sum
+- remove duplicates
+- frequency map
+- sorting based scans
 
-- `0` to `arr.length - 1`
+## 24. Negative numbers ka effect
 
-### Empty array case ignore karna
+Negative values problem pattern ko change kar sakti hain.
 
-Example:
+Examples:
+- sliding window on positives easy hota hai
+- negatives aate hi prefix sum ya hashing lag sakta hai
+- product problems me negatives sign flip karte hain
+- maximum/minimum tracking dono important ho jaata hai
 
-```java
-int[] arr = {};
-```
+## 25. Zero ka special role
 
-### Fixed size bhool jana
+Zero bohot problems me edge case hota hai.
 
-Java arrays resize nahi hote.
+Examples:
+- product except self
+- move zeros
+- matrix zeroes
+- prefix/sum reset logic
+- duplicate ya missing positive style arrangements
 
-## 13. Time complexity cheat sheet
+## 26. Cyclic sort type idea
 
-- access by index = `O(1)`
-- update by index = `O(1)`
-- traversal = `O(n)`
-- linear search = `O(n)`
-- insertion in middle = `O(n)`
-- deletion in middle = `O(n)`
-- binary search = `O(log n)` on sorted array
+Jab array values kisi limited index-based range ko represent karti hain, tab values ko "correct index" par place karne ka idea aata hai.
 
-## 14. Quick revision summary
+Typical use:
+- first missing positive
+- missing number
+- duplicate in range-based arrays
 
-- Java array fixed-size hota hai.
-- Length ke liye `arr.length` use hota hai.
-- Frequent insert/delete ke liye array best nahi hota.
-- Two pointers, sliding window, prefix sum, hashing arrays ke core patterns hain.
-- `HashMap`, `HashSet`, `Arrays.sort()`, `Arrays.toString()` practical interviews me bohot useful hote hain.
+Important:
+- har number ka ek expected index hota hai
+- swaps tab tak chalte hain jab tak value sahi jagah na aa jaye
 
-## 15. Suggested order to practice
+## 27. Interval thinking in arrays
 
-1. reverse array
-2. max/min in array
-3. linear search
-4. move zeros to end
-5. two sum
-6. merge sorted arrays
-7. best time to buy and sell stock
-8. subarray sum equals `k`
-9. binary search
-10. 2D matrix traversal
+Kabhi array direct numbers ka hota hai, kabhi har element ek interval hota hai.
 
-## 16. Final takeaway
+Interval problems me:
+- sorting by start or end
+- overlap condition
+- merge logic
+- room allocation
+- meeting scheduling
 
-Agar arrays Java me strong ho gaye, to tum in topics me bhi strong ho jaoge:
+ye sab core ideas hote hain.
 
-- strings
-- sliding window
-- hashing
-- binary search
-- matrices
-- dynamic programming basics
+## 28. Matrix theory essentials
 
-Java interview ke liye arrays ka practical focus ye hona chahiye:
+2D array problems me ye cheezein strong honi chahiye:
 
-- `arr.length`
-- loops and traversal
-- `HashMap` and `HashSet`
-- `Arrays` utility class
-- pattern recognition like two pointers and prefix sum
+- dimensions ka clear understanding
+- boundaries out of range na ho
+- neighbors ka traversal
+- diagonals ki understanding
+- transpose relation
+- row-wise aur column-wise behavior
+
+## 29. Common mistakes in arrays
+
+- `length()` likh dena instead of `length`
+- off-by-one errors
+- last index galat lena
+- empty array case ignore karna
+- single element case bhool jaana
+- duplicates ko handle na karna
+- sorted/unsorted distinction miss karna
+- negative numbers aur zero ke edge cases miss karna
+- matrix me row aur column boundaries confuse karna
+
+## 30. Off-by-one error kya hota hai?
+
+Ye arrays me sabse common mistake hai.
+
+Reasons:
+- loop condition me `<` aur `<=` ka confusion
+- `n - 1` ka dhyan na rakhna
+- prefix aur suffix boundaries galat lena
+- left/right pointers ko galat update karna
+
+## 31. Array problem ka interview approach
+
+Array question dekhte hi ye flow sochna useful hota hai:
+
+1. Kya brute force obvious hai?
+2. Kya array sorted hai?
+3. Kya hashing helpful hogi?
+4. Kya contiguous condition hai?
+5. Kya two pointers lag sakta hai?
+6. Kya prefix sum helpful hai?
+7. Kya in-place karna hai?
+8. Kya matrix/interval interpretation hai?
+
+## 32. Brute force, better, optimal thinking
+
+Array interviews me direct optimal answer bolne se pehle approach ladder samajhna zaroori hai:
+
+### Brute Force
+
+Sab possibilities check karna. Usually easy to think, but slow.
+
+### Better
+
+Hashing, sorting, ya extra structure use karke time improve karna.
+
+### Optimal
+
+Problem pattern identify karke best possible solution dena.
+
+Ye progression samajhna actual coding se bhi zyada important hota hai.
+
+## 33. Real interview value of arrays
+
+Arrays sirf ek topic nahi hain. Ye problem solving ka foundation hain. Agar arrays strong hain to tum:
+
+- loop logic strong kar loge
+- indexing mistakes kam kar doge
+- patterns jaldi identify kar paoge
+- hashing aur binary search better samjhoge
+- matrices aur grids se comfortable ho jaoge
+
+## 34. Quick revision sheet
+
+- Array same type values ka fixed-size structure hai.
+- Java me indexing `0` se start hoti hai.
+- `arr.length` property hoti hai.
+- Access aur update fast hote hain.
+- Insertion/deletion costly ho sakte hain.
+- Sorted array extra power deta hai.
+- Contiguous word ka matlab subarray hota hai.
+- Two pointers, sliding window, prefix sum, hashing, sorting, binary search aur matrix handling arrays ke core patterns hain.
+- Edge cases arrays me bohot important hote hain.
+
+## 35. Final takeaway
+
+Array mastery ka matlab sirf syntax ya loops yaad karna nahi hai. Actual mastery tab hoti hai jab tum problem dekhkar turant identify kar pao ki:
+
+- direct traversal chalega
+- two pointers chahiye
+- sliding window lagega
+- prefix sum useful hai
+- hashing se answer niklega
+- sorting zaroori hai
+- binary search apply hogi
+- ya problem 2D matrix logic me convert ho rahi hai
+
+Jitna array theory strong hoga, utni hi DSA ki baaki journey smooth hogi.
