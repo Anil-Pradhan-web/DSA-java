@@ -303,18 +303,52 @@ public class A02AlgorithmQuestionBank {
 
     // Q18: Prefix sum ka basic fayda kya hota hai?
     // Answer: Range sum queries fast ho jati hain after preprocessing.
+    // Prefix sum ka matlab:
+    // prefix[i] = arr[0] + arr[1] + ... + arr[i]
+    //
+    // Example:
+    // arr    = [2, 4, 6, 8]
+    // prefix = [2, 6, 12, 20]
+    //
+    // Yahan:
+    // prefix[0] = 2
+    // prefix[1] = 2 + 4 = 6
+    // prefix[2] = 2 + 4 + 6 = 12
+    // prefix[3] = 2 + 4 + 6 + 8 = 20
+    //
+    // Agar hume range sum l se r tak chahiye:
+    // 1. Agar l == 0 ho, to answer direct prefix[r] hoga
+    // 2. Agar l > 0 ho, to answer = prefix[r] - prefix[l - 1]
+    //
+    // Is example me range (1 to 3) ka sum:
+    // arr[1] + arr[2] + arr[3] = 4 + 6 + 8 = 18
+    // Formula se:
+    // prefix[3] - prefix[0] = 20 - 2 = 18
     private static void q18PrefixSumIdea() {
         printHeading(18, "Build a prefix sum array");
         int[] arr = {2, 4, 6, 8};
         int[] prefix = new int[arr.length];
+
+        // Prefix array ka first element same hota hai, kyunki usse pehle kuch add nahi hota.
         prefix[0] = arr[0];
 
         for (int i = 1; i < arr.length; i++) {
+            // Har index par pichhle prefix sum me current array value add kar do.
+            // Isi se running total banta chala jata hai.
             prefix[i] = prefix[i - 1] + arr[i];
         }
 
+        // Range define kar rahe hain: l = starting index, r = ending index.
+        int l = 1;
+        int r = 3;
+
+        // Agar l == 0 hota to answer direct prefix[r] hota.
+        // Yahan l = 1 hai, isliye formula use karenge:
+        // rangeSum = prefix[r] - prefix[l - 1]
+        int rangeSum = prefix[r] - prefix[l - 1];
+
         System.out.println("Prefix = " + Arrays.toString(prefix));
-        System.out.println("Range sum (1 to 3) = " + (prefix[3] - prefix[0]));
+        System.out.println("Range sum (" + l + " to " + r + ") = " + rangeSum);
     }
 
     // Q19: Kisi number ke digits count karne me O(log n) ka intuition kya hai?
