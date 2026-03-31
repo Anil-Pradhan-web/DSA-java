@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class AlgorithmQuestionBank {
+public class A02AlgorithmQuestionBank {
     public static void main(String[] args) {
         q1ConstantTimeAccess();
         q2LinearLoopComplexity();

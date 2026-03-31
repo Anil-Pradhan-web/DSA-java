@@ -1,4 +1,4 @@
-public class BasicsQuestionBank {
+public class A01BasicsQuestionBank {
     public static void main(String[] args) {
         q1VariablesAndTypes();
         q2ArithmeticOperators();
