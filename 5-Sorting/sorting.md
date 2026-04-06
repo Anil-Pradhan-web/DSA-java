@@ -1,684 +1,759 @@
-# Sorting in Java for DSA
+# Sorting Theory Notes
 
 ## 1. Sorting kya hota hai?
 
-Sorting ka matlab hota hai elements ko kisi order me arrange karna.
-
-Most common orders:
+Sorting ka matlab hota hai data ko kisi defined order me arrange karna. Most common order hota hai:
 
 - increasing order
 - decreasing order
-- custom order based on frequency, value, ya condition
+- custom order based on frequency, key, ya condition
 
-Example:
+Simple example:
+- unsorted data random order me hota hai
+- sorted data structured order me hota hai
 
-```text
-[5, 2, 8, 1, 3] -> [1, 2, 3, 5, 8]
-```
+## 2. Sorting kyun important hai?
 
-Sorting DSA me bohot important hai because:
+Sorting DSA ka foundation topic hai because:
+- searching fast ho jaati hai
+- duplicates handling easy ho jaati hai
+- interval problems simplify ho jaati hain
+- greedy decisions clearer ho jaate hain
+- binary search possible ho jaati hai
+- many optimization problems ka setup easy ho jaata hai
 
-- searching fast ho jati hai
-- duplicates handling easy hota hai
-- greedy aur interval problems simpler ho jati hain
-- interviews me bohot common topic hai
+## 3. Sorting problem dekhte hi kya sochna chahiye?
 
-## 2. Bubble Sort
+Sabse pehle ye questions sochne chahiye:
 
-Idea:
+- ascending chahiye ya descending?
+- stable sorting chahiye?
+- in-place sorting chahiye?
+- extra space allowed hai?
+- data ka range small hai?
+- integers hain ya objects?
+- near-sorted data hai?
+- guaranteed worst-case performance important hai?
+- duplicates important role play kar rahe hain?
 
-- adjacent elements compare karo
-- agar wrong order me hain to swap karo
-- har pass ke baad largest element end me chala jata hai
+Ye questions algorithm choice decide karte hain.
 
-### Java code
+## 4. Comparison-based vs Non-comparison-based sorting
 
-```java
-public static void bubbleSort(int[] arr) {
-    int n = arr.length;
+Sorting algorithms broadly do categories me aate hain:
 
-    for (int i = 0; i < n - 1; i++) {
-        boolean swapped = false;
+### Comparison-based sorting
 
-        for (int j = 0; j < n - 1 - i; j++) {
-            if (arr[j] > arr[j + 1]) {
-                int temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
-                swapped = true;
-            }
-        }
+Elements ko compare karke order decide hota hai.
 
-        if (!swapped) {
-            break;
-        }
-    }
-}
-```
-
-### Complexity
-
-- time = `O(n^2)`
-- best case with optimization = `O(n)`
-- space = `O(1)`
-- stable = yes
-
-## 3. Selection Sort
-
-Idea:
-
-- har position ke liye minimum element dhoondo
-- usse current index par swap karo
-
-### Java code
-
-```java
-public static void selectionSort(int[] arr) {
-    for (int i = 0; i < arr.length - 1; i++) {
-        int minIndex = i;
-
-        for (int j = i + 1; j < arr.length; j++) {
-            if (arr[j] < arr[minIndex]) {
-                minIndex = j;
-            }
-        }
-
-        int temp = arr[i];
-        arr[i] = arr[minIndex];
-        arr[minIndex] = temp;
-    }
-}
-```
-
-### Complexity
-
-- time = `O(n^2)`
-- space = `O(1)`
-- stable = no
-
-## 4. Insertion Sort
-
-Idea:
-
-- current element ko uski correct position par insert karo
-- sorted aur unsorted part ka concept use hota hai
-
-### Java code
-
-```java
-public static void insertionSort(int[] arr) {
-    for (int i = 1; i < arr.length; i++) {
-        int key = arr[i];
-        int j = i - 1;
-
-        while (j >= 0 && arr[j] > key) {
-            arr[j + 1] = arr[j];
-            j--;
-        }
-
-        arr[j + 1] = key;
-    }
-}
-```
-
-### Complexity
-
-- time = `O(n^2)`
-- best case = `O(n)`
-- space = `O(1)`
-- stable = yes
-
-### Important point
-
-- nearly sorted arrays ke liye bohot achha hota hai
-
-## 5. Merge Sort
-
-Merge sort divide and conquer algorithm hai.
-
-### Java code
-
-```java
-public static void mergeSort(int[] arr, int left, int right) {
-    if (left >= right) {
-        return;
-    }
-
-    int mid = left + (right - left) / 2;
-    mergeSort(arr, left, mid);
-    mergeSort(arr, mid + 1, right);
-    merge(arr, left, mid, right);
-}
-
-public static void merge(int[] arr, int left, int mid, int right) {
-    int[] temp = new int[right - left + 1];
-    int i = left;
-    int j = mid + 1;
-    int k = 0;
-
-    while (i <= mid && j <= right) {
-        if (arr[i] <= arr[j]) {
-            temp[k++] = arr[i++];
-        } else {
-            temp[k++] = arr[j++];
-        }
-    }
-
-    while (i <= mid) {
-        temp[k++] = arr[i++];
-    }
-
-    while (j <= right) {
-        temp[k++] = arr[j++];
-    }
-
-    for (int p = 0; p < temp.length; p++) {
-        arr[left + p] = temp[p];
-    }
-}
-```
-
-### Complexity
-
-- time = `O(n log n)`
-- space = `O(n)`
-- stable = yes
-
-### Important point
-
-- divide and conquer ka classic example hai
-
-## 6. Quick Sort
-
-Quick sort bhi divide and conquer algorithm hai.
-
-### Java code
-
-```java
-public static void quickSort(int[] arr, int low, int high) {
-    if (low < high) {
-        int pivotIndex = partition(arr, low, high);
-        quickSort(arr, low, pivotIndex - 1);
-        quickSort(arr, pivotIndex + 1, high);
-    }
-}
-
-public static int partition(int[] arr, int low, int high) {
-    int pivot = arr[high];
-    int i = low - 1;
-
-    for (int j = low; j < high; j++) {
-        if (arr[j] < pivot) {
-            i++;
-            int temp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = temp;
-        }
-    }
-
-    int temp = arr[i + 1];
-    arr[i + 1] = arr[high];
-    arr[high] = temp;
-    return i + 1;
-}
-```
-
-### Complexity
-
-- average = `O(n log n)`
-- worst = `O(n^2)`
-- space = average recursion stack `O(log n)`
-- stable = no
-- in-place = yes
-
-## 7. Heap Sort
-
-Heap sort binary heap use karta hai.
-
-Idea:
-
-- max heap banao
-- root ko end me swap karo
-- heap size reduce karo
-- heapify repeat karo
-
-### Java code
-
-```java
-public static void heapSort(int[] arr) {
-    int n = arr.length;
-
-    for (int i = n / 2 - 1; i >= 0; i--) {
-        heapify(arr, n, i);
-    }
-
-    for (int i = n - 1; i > 0; i--) {
-        int temp = arr[0];
-        arr[0] = arr[i];
-        arr[i] = temp;
-
-        heapify(arr, i, 0);
-    }
-}
-
-public static void heapify(int[] arr, int n, int i) {
-    int largest = i;
-    int left = 2 * i + 1;
-    int right = 2 * i + 2;
-
-    if (left < n && arr[left] > arr[largest]) {
-        largest = left;
-    }
-
-    if (right < n && arr[right] > arr[largest]) {
-        largest = right;
-    }
-
-    if (largest != i) {
-        int temp = arr[i];
-        arr[i] = arr[largest];
-        arr[largest] = temp;
-        heapify(arr, n, largest);
-    }
-}
-```
-
-### Complexity
-
-- time = `O(n log n)`
-- space = `O(1)`
-- stable = no
-
-## 8. Counting Sort
-
-Counting sort tab useful hota hai jab integer range small ho.
-
-### Java code
-
-```java
-public static void countingSort(int[] arr) {
-    int max = arr[0];
-
-    for (int x : arr) {
-        max = Math.max(max, x);
-    }
-
-    int[] count = new int[max + 1];
-
-    for (int x : arr) {
-        count[x]++;
-    }
-
-    int index = 0;
-    for (int value = 0; value < count.length; value++) {
-        while (count[value] > 0) {
-            arr[index++] = value;
-            count[value]--;
-        }
-    }
-}
-```
-
-### Complexity
-
-- time = `O(n + k)`
-- space = `O(k)`
-- stable = can be made stable in standard implementation
-
-## 9. Radix Sort
-
-Radix sort numbers ko digit by digit sort karta hai.
-
-Idea:
-
-- ones place par sort karo
-- tens place par sort karo
-- hundreds place par sort karo
-- usually stable counting sort as subroutine use hota hai
-
-### Java code
-
-```java
-public static void radixSort(int[] arr) {
-    int max = arr[0];
-    for (int x : arr) {
-        max = Math.max(max, x);
-    }
-
-    for (int exp = 1; max / exp > 0; exp *= 10) {
-        countingSortByDigit(arr, exp);
-    }
-}
-
-public static void countingSortByDigit(int[] arr, int exp) {
-    int n = arr.length;
-    int[] output = new int[n];
-    int[] count = new int[10];
-
-    for (int i = 0; i < n; i++) {
-        int digit = (arr[i] / exp) % 10;
-        count[digit]++;
-    }
-
-    for (int i = 1; i < 10; i++) {
-        count[i] += count[i - 1];
-    }
-
-    for (int i = n - 1; i >= 0; i--) {
-        int digit = (arr[i] / exp) % 10;
-        output[count[digit] - 1] = arr[i];
-        count[digit]--;
-    }
-
-    for (int i = 0; i < n; i++) {
-        arr[i] = output[i];
-    }
-}
-```
-
-### Complexity
-
-- time = `O(nk)`
-- space = `O(n + k)` depending on digit base
-
-Here `k` means number of digits.
-
-## 10. Shell Sort
-
-Shell sort insertion sort ka improved version hai.
-
-Idea:
-
-- gap based insertion sort lagao
-- pehle bade gap use karo
-- gradually gap reduce karo until `1`
-
-### Java code
-
-```java
-public static void shellSort(int[] arr) {
-    int n = arr.length;
-
-    for (int gap = n / 2; gap > 0; gap /= 2) {
-        for (int i = gap; i < n; i++) {
-            int temp = arr[i];
-            int j = i;
-
-            while (j >= gap && arr[j - gap] > temp) {
-                arr[j] = arr[j - gap];
-                j -= gap;
-            }
-
-            arr[j] = temp;
-        }
-    }
-}
-```
-
-### Complexity
-
-- depends on gap sequence
-- usually practical improvement over insertion sort
-- stable = no
-
-## 11. `Arrays.sort()` in Java
-
-### For primitive arrays
-
-```java
-import java.util.Arrays;
-
-int[] arr = {5, 2, 9, 1};
-Arrays.sort(arr);
-```
-
-### Important interview note
-
-- primitive arrays ke liye `Arrays.sort()` internally Dual-Pivot QuickSort use karta hai
-- object arrays ke liye implementation alag ho sakti hai
-
-## 12. Stable vs unstable sorting
-
-### Stable sorts
-
+Examples:
 - Bubble Sort
+- Selection Sort
 - Insertion Sort
 - Merge Sort
-- Counting Sort standard stable version
-
-### Unstable sorts
-
-- Selection Sort
 - Quick Sort
 - Heap Sort
 - Shell Sort
 
-## 13. Quick comparison
+### Non-comparison-based sorting
 
-- Bubble Sort -> simple, stable, slow
-- Selection Sort -> simple, not stable
-- Insertion Sort -> stable, nearly sorted arrays ke liye good
-- Merge Sort -> stable, guaranteed `O(n log n)`
-- Quick Sort -> average fast, in-place
-- Heap Sort -> `O(n log n)`, not stable
-- Counting Sort -> small integer range ke liye
-- Radix Sort -> digit by digit sorting
-- Shell Sort -> improved insertion sort
+Direct ordering logic ya digit/range based technique use hoti hai.
 
-## 14. Practice Problems
+Examples:
+- Counting Sort
+- Radix Sort
+- Bucket Sort
 
-## 14.1 Sort array of 0s, 1s, 2s
+## 5. Comparison sorts ka theoretical limit
 
-Dutch National Flag problem.
+Comparison-based sorting ka best general lower bound `O(n log n)` hota hai.
 
-```java
-public static void sortColors(int[] arr) {
-    int low = 0;
-    int mid = 0;
-    int high = arr.length - 1;
+Iska matlab:
+- comparison-based algorithm normally isse better worst-case generic sorting nahi de sakta
 
-    while (mid <= high) {
-        if (arr[mid] == 0) {
-            int temp = arr[low];
-            arr[low] = arr[mid];
-            arr[mid] = temp;
-            low++;
-            mid++;
-        } else if (arr[mid] == 1) {
-            mid++;
-        } else {
-            int temp = arr[mid];
-            arr[mid] = arr[high];
-            arr[high] = temp;
-            high--;
-        }
-    }
-}
-```
+Isliye Merge Sort, Heap Sort, aur average-case Quick Sort practical world me bahut important hote hain.
 
-## 14.2 Merge two sorted arrays without extra space
+## 6. Stability kya hoti hai?
 
-Simple gap method idea use kar sakte ho.
+Stable sorting ka matlab:
+- agar do elements equal hain, to unka original relative order preserve rahe
 
-```java
-public static void mergeWithoutExtraSpace(int[] a, int[] b) {
-    int n = a.length;
-    int m = b.length;
-    int gap = (n + m + 1) / 2;
+Ye tab important hota hai jab:
+- elements ke multiple keys ho
+- pehle kisi aur field par order maintain karna ho
+- custom objects sort kar rahe ho
 
-    while (gap > 0) {
-        int i = 0;
-        int j = gap;
+Example thinking:
+- marks same hain but names ka old order preserve chahiye
 
-        while (j < n + m) {
-            int first = getValue(a, b, i, n);
-            int second = getValue(a, b, j, n);
+## 7. In-place sorting kya hoti hai?
 
-            if (first > second) {
-                setValue(a, b, i, second, n);
-                setValue(a, b, j, first, n);
-            }
-            i++;
-            j++;
-        }
+In-place sorting ka matlab:
+- algorithm bahut kam extra memory use kare
+- usually same array ke andar rearrangement ho
 
-        if (gap == 1) {
-            break;
-        }
-        gap = (gap + 1) / 2;
-    }
-}
+Examples:
+- Bubble Sort
+- Selection Sort
+- Insertion Sort
+- Quick Sort
+- Heap Sort
 
-public static int getValue(int[] a, int[] b, int index, int n) {
-    return index < n ? a[index] : b[index - n];
-}
+Not fully in-place:
+- Merge Sort standard version
+- Counting Sort
+- Radix Sort
 
-public static void setValue(int[] a, int[] b, int index, int value, int n) {
-    if (index < n) {
-        a[index] = value;
-    } else {
-        b[index - n] = value;
-    }
-}
-```
+## 8. Adaptive sorting kya hoti hai?
 
-## 14.3 Find kth smallest element using QuickSelect
+Adaptive algorithm ka matlab:
+- agar input already ya nearly sorted ho, to algorithm faster behave kare
 
-```java
-public static int quickSelect(int[] arr, int low, int high, int k) {
-    int pivotIndex = partition(arr, low, high);
+Examples:
+- Insertion Sort adaptive hoti hai
+- optimized Bubble Sort kuch extent tak adaptive hoti hai
 
-    if (pivotIndex == k) {
-        return arr[pivotIndex];
-    } else if (pivotIndex > k) {
-        return quickSelect(arr, low, pivotIndex - 1, k);
-    } else {
-        return quickSelect(arr, pivotIndex + 1, high, k);
-    }
-}
-```
+Ye real-world data ke liye important property ho sakti hai.
 
-Usage:
+## 9. Internal vs External Sorting
 
-```java
-int kthSmallest = quickSelect(arr, 0, arr.length - 1, k - 1);
-```
+### Internal Sorting
 
-## 14.4 Sort characters by frequency
+Jab poora data memory me fit ho jaye.
 
-```java
-public static String frequencySort(String s) {
-    java.util.HashMap<Character, Integer> map = new java.util.HashMap<>();
+### External Sorting
 
-    for (char ch : s.toCharArray()) {
-        map.put(ch, map.getOrDefault(ch, 0) + 1);
-    }
+Jab data itna bada ho ki disk/file based processing chahiye.
 
-    java.util.List<Character> list = new java.util.ArrayList<>(map.keySet());
-    list.sort((a, b) -> map.get(b) - map.get(a));
+DSA/interview me mostly internal sorting discuss hoti hai.
 
-    StringBuilder sb = new StringBuilder();
-    for (char ch : list) {
-        int freq = map.get(ch);
-        for (int i = 0; i < freq; i++) {
-            sb.append(ch);
-        }
-    }
+## 10. Bubble Sort
 
-    return sb.toString();
-}
-```
+Bubble Sort me adjacent elements compare karte hain aur wrong order me hone par swap karte hain.
 
-## 14.5 Merge overlapping intervals
+Intuition:
+- har pass me largest element end tak bubble ho jata hai
 
-```java
-public static int[][] mergeIntervals(int[][] intervals) {
-    java.util.Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
-    java.util.List<int[]> result = new java.util.ArrayList<>();
+Properties:
+- simple
+- stable
+- in-place
+- generally slow
 
-    for (int[] interval : intervals) {
-        if (result.isEmpty() || result.get(result.size() - 1)[1] < interval[0]) {
-            result.add(new int[]{interval[0], interval[1]});
-        } else {
-            result.get(result.size() - 1)[1] = Math.max(result.get(result.size() - 1)[1], interval[1]);
-        }
-    }
+Use case:
+- educational understanding
+- very small inputs
 
-    return result.toArray(new int[result.size()][]);
-}
-```
+Not recommended for large practical sorting.
 
-## 14.6 Sort array by parity
+## 11. Selection Sort
 
-Even numbers pehle, odd numbers baad me.
+Selection Sort me har position ke liye minimum element choose karke current position par rakhte hain.
 
-```java
-public static void sortArrayByParity(int[] nums) {
-    int left = 0;
-    int right = nums.length - 1;
+Intuition:
+- sorted part left side me gradually build hota hai
 
-    while (left < right) {
-        if (nums[left] % 2 > nums[right] % 2) {
-            int temp = nums[left];
-            nums[left] = nums[right];
-            nums[right] = temp;
-        }
+Properties:
+- simple
+- in-place
+- generally unstable
+- swaps kam hoti hain
+- comparisons fixed pattern me hoti hain
 
-        if (nums[left] % 2 == 0) {
-            left++;
-        }
+Useful mostly concept learning ke liye.
 
-        if (nums[right] % 2 == 1) {
-            right--;
-        }
-    }
-}
-```
+## 12. Insertion Sort
 
-## 15. Common mistakes in sorting
+Insertion Sort sorted aur unsorted part ke concept par based hota hai.
 
-- sorting algorithm ko blindly use kar dena
-- stable vs unstable sort ignore kar dena
-- extra space ko ignore kar dena
-- quick sort ke worst case ko bhool jana
-- counting sort ko large range par use kar dena
+Intuition:
+- har naya element uski correct jagah par insert hota hai
+- jaise cards ko haath me sort karte hain
 
-## 16. Time complexity summary
+Properties:
+- stable
+- in-place
+- adaptive
+- nearly sorted arrays me strong perform karta hai
+
+Insertion sort ka practical value small arrays aur hybrid algorithms me bhi hota hai.
+
+## 13. Merge Sort
+
+Merge Sort divide and conquer algorithm hai.
+
+Idea:
+- array ko half me divide karo
+- halves ko sort karo
+- sorted halves ko merge karo
+
+Key strength:
+- guaranteed `O(n log n)` performance
+- stable hota hai
+
+Weakness:
+- extra memory lagti hai
+
+Merge Sort bahut important hai because:
+- theory strong hai
+- inversion count jaisi problems me use hota hai
+- linked list sorting me bhi useful hota hai
+
+## 14. Divide and Conquer kya hota hai?
+
+Divide and Conquer ka general pattern:
+
+1. problem ko chhote parts me divide karo
+2. unko recursively solve karo
+3. answers combine karo
+
+Sorting me:
+- Merge Sort
+- Quick Sort
+
+classic divide and conquer examples hain.
+
+## 15. Quick Sort
+
+Quick Sort bhi divide and conquer algorithm hai.
+
+Idea:
+- ek pivot choose karo
+- smaller elements ek side
+- greater elements doosri side
+- phir recursively sort karo
+
+Properties:
+- average case fast
+- in-place
+- usually unstable
+- worst case bad ho sakta hai
+
+Quick Sort practice aur interviews dono me bohot important hai.
+
+## 16. Pivot selection ka importance
+
+Quick Sort me pivot selection performance ko affect karta hai.
+
+Poor pivot choice:
+- highly unbalanced partitions
+- worst case `O(n^2)`
+
+Better pivot strategies:
+- random pivot
+- median-ish choice
+- practical optimizations
+
+Pivot theory samajhna Quick Sort behavior samajhne ke liye zaroori hai.
+
+## 17. Partitioning concept
+
+Partitioning ka matlab:
+- pivot ke respect me array ko do logical groups me baantna
+
+Ek side:
+- pivot se chhote ya equal
+
+Doosri side:
+- pivot se bade
+
+Partitioning Quick Sort aur QuickSelect dono me core role play karti hai.
+
+## 18. Heap Sort
+
+Heap Sort binary heap structure use karta hai.
+
+Idea:
+- max heap banao
+- largest element root par milta hai
+- use end par le jao
+- heap size reduce karo
+- process repeat karo
+
+Properties:
+- `O(n log n)` guaranteed
+- in-place
+- unstable
+
+Heap Sort theoretical perspective se strong hai, but practical constants kabhi-kabhi Quick Sort se worse lag sakte hain.
+
+## 19. Heap intuition
+
+Heap ek complete binary tree based structure hota hai jahan parent-child relation follow hota hai.
+
+Max heap me:
+- parent >= children
+
+Min heap me:
+- parent <= children
+
+Heap sorting aur priority-based problems dono me important hai.
+
+## 20. Counting Sort
+
+Counting Sort tab useful hoti hai jab:
+- values integers hon
+- range chhoti ho
+
+Idea:
+- har value kitni baar aayi uska count store karo
+- phir counts ke basis par sorted output build karo
+
+Properties:
+- comparison-based nahi hai
+- fast ho sakti hai
+- range bada ho to impractical ho sakti hai
+
+## 21. Counting Sort kab use nahi karni chahiye?
+
+Avoid when:
+- values ka range bahut bada ho
+- negatives aur sparse values हों without preprocessing
+- memory constraint ho
+
+Yani sirf `O(n + k)` dekhkar counting sort choose nahi karni chahiye; `k` bhi practical hona chahiye.
+
+## 22. Radix Sort
+
+Radix Sort numbers ya strings ko digit/position wise sort karti hai.
+
+Idea:
+- least significant digit se start
+- stable sub-sort use karo
+- next digit par repeat karo
+
+Properties:
+- non-comparison based
+- stable subroutine zaroori hoti hai
+- useful when key length manageable ho
+
+## 23. Bucket Sort
+
+Bucket Sort values ko buckets me distribute karti hai aur phir har bucket ko sort karti hai.
+
+Useful when:
+- data reasonably uniformly distributed ho
+
+Theory note:
+- average case strong ho sakta hai
+- data distribution par depend karta hai
+
+## 24. Shell Sort
+
+Shell Sort insertion sort ka improved version hai.
+
+Idea:
+- pehle gap based compare/insert karo
+- gap gradually reduce karo
+- last me gap 1 par normal insertion sort ho jaata hai
+
+Properties:
+- in-place
+- generally unstable
+- performance gap sequence par depend karti hai
+
+## 25. QuickSelect
+
+QuickSelect sorting algorithm nahi, selection algorithm hai.
+
+Use:
+- kth smallest
+- kth largest
+
+Idea:
+- Quick Sort jaisa partition karo
+- bas us side recur karo jahan kth answer ho sakta hai
+
+Average:
+- `O(n)`
+
+QuickSelect selection problems me bohot useful hota hai.
+
+## 26. Partial Sorting aur Full Sorting
+
+Har problem me poora sort karna zaroori nahi hota.
+
+Sometimes better options:
+- kth element ke liye heap ya QuickSelect
+- top k ke liye heap
+- two smallest/largest ke liye full sort unnecessary hai
+
+Interview insight:
+- sorting ek tool hai, default solution nahi
+
+## 27. Sorting and Searching ka relation
+
+Sorting ke baad:
+- binary search possible ho jaati hai
+- duplicates grouping easy ho jaati hai
+- intervals easily process ho jaate hain
+- two pointers powerful ho jaate hain
+
+Isliye kaafi problems me pehla step sorting hota hai.
+
+## 28. Sorting and Two Pointers
+
+Sorting ke baad two pointers bahut powerful combo ban jaata hai.
+
+Examples:
+- Two Sum sorted style
+- 3Sum
+- 4Sum
+- remove duplicates
+- interval merge style scans
+
+## 29. Sorting and Greedy
+
+Greedy problems me sorting ka role bahut common hota hai.
+
+Examples:
+- interval scheduling
+- meeting rooms variants
+- job sequencing style setups
+- activity selection
+
+Sorting often greedy decisions ko valid aur simpler banati hai.
+
+## 30. Sorting and Intervals
+
+Intervals solve karte waqt almost hamesha sorting helpful hoti hai.
+
+Common interval tasks:
+- merge overlaps
+- insert interval
+- find intersections
+- remove overlaps
+- meeting room count
+
+Usually sorting start time ya end time par hoti hai.
+
+## 31. Sorting custom data
+
+Real problems me numbers hi nahi, objects ya pairs bhi sort karne hote hain.
+
+Possible sort keys:
+- first value
+- second value
+- frequency
+- string length
+- absolute difference
+- multiple keys
+
+Custom sorting interview me very important practical skill hai.
+
+## 32. Multi-key sorting
+
+Kabhi sort rule hota hai:
+- pehle primary key par sort karo
+- tie ho to secondary key
+
+Example thinking:
+- marks ascending
+- tie ho to name lexicographically
+
+Stability aur comparator logic yahan important ho jaata hai.
+
+## 33. Stable sort kab important hoti hai?
+
+Stable sort especially useful hoti hai when:
+- equal keys ke beech purana order preserve karna ho
+- multi-step sorting karni ho
+- records ke saath kaam ho raha ho
+
+Agar stable sort chahiye aur algorithm unstable hai,
+to result logically galat bhi lag sakta hai.
+
+## 34. In-place vs Extra Space trade-off
+
+Kabhi choice hoti hai:
+- in-place but unstable
+ya
+- extra space but stable and clean
+
+Example:
+- Merge Sort stable hai but extra space leti hai
+- Heap Sort in-place hai but unstable hai
+
+Algorithm choice sirf time complexity se nahi hoti; space aur stability bhi matter karte hain.
+
+## 35. Best case, average case, worst case
+
+Sorting evaluate karte waqt 3 cases dekhna chahiye:
+
+### Best Case
+
+Sabse favorable input
+
+### Average Case
+
+Typical realistic input
+
+### Worst Case
+
+Sabse difficult input
+
+Quick Sort example:
+- average strong
+- worst poor
+
+Merge Sort example:
+- guaranteed consistent
+
+## 36. Adaptive behavior
+
+Kuch algorithms nearly sorted data par fast ho jaati hain.
+
+Example:
+- Insertion Sort
+- optimized Bubble Sort
+
+Ye property tab useful hoti hai jab data already almost ordered ho.
+
+## 37. Online vs Offline sorting-related thinking
+
+### Offline
+
+Saara data pehle se available ho.
+
+### Online
+
+Data stream me aata ho aur continuously maintain karna ho.
+
+Online scenarios me:
+- heaps
+- balanced structures
+- incremental insertion
+
+zyada useful hote hain.
+
+## 38. Sorting algorithm choose kaise karein?
+
+Practical selection logic:
+
+### Small data
+
+- Insertion Sort
+- simple approach enough
+
+### General purpose guaranteed performance
+
+- Merge Sort
+- Heap Sort
+
+### Practical fast average case
+
+- Quick Sort
+- library sort
+
+### Small integer range
+
+- Counting Sort
+
+### Digit-based numeric data
+
+- Radix Sort
+
+### Top k / selection
+
+- Heap
+- QuickSelect
+
+## 39. Java me sorting
+
+Java me sorting ka practical use mostly library based hota hai.
+
+Important understanding:
+- primitive arrays aur object arrays ka behavior different ho sakta hai
+- comparator based sorting objects ke liye useful hoti hai
+- custom ordering frequently interviews me poochi jaati hai
+
+Interview me ye bhi pucha ja sakta hai:
+- `Arrays.sort()` internally kya concept use karta hai?
+
+Theory level par samajhna enough hota hai; exact implementation details ratna zaroori nahi.
+
+## 40. Sorting ke common interview patterns
+
+## 40.1 Sort and Scan
+
+Pehle sort karo, phir ek pass me answer nikaalo.
+
+## 40.2 Sort and Two Pointers
+
+3Sum, pair finding, deduplication.
+
+## 40.3 Sort and Greedy
+
+Intervals, scheduling, activity selection.
+
+## 40.4 Sort and Binary Search
+
+Sorting ke baad bound ya custom search.
+
+## 40.5 Sort and Heap
+
+Top k ya partial ordering.
+
+## 41. Common sorting-related problems
+
+Sorting ka use frequently hota hai:
+- merge intervals
+- sort colors
+- kth element
+- meeting rooms
+- group anagrams via sorted key
+- frequency sort
+- custom comparator problems
+- inversion count indirectly through merge logic
+
+## 42. Dutch National Flag concept
+
+Ye standard comparison sort nahi hai, but sorting-related important pattern hai.
+
+Use:
+- arrays of 0, 1, 2
+- 3-way partitioning
+
+Idea:
+- low, mid, high pointers
+- elements ko categories me partition karna
+
+Ye Quick Sort partition intuition se bhi related hai.
+
+## 43. Inversion Count and Sorting
+
+Inversion count direct sorting problem nahi, but Merge Sort ke concept se efficient solve hota hai.
+
+Ye dikhata hai ki sorting algorithms sirf sorting ke liye nahi,
+balancing/counting style problems ke liye bhi useful hote hain.
+
+## 44. Sorting ke common mistakes
+
+- problem samjhe bina default sort kar dena
+- stable vs unstable difference ignore kar dena
+- extra space overlook kar dena
+- range-based sorts ko large range par apply kar dena
+- Quick Sort ke worst case ko ignore kar dena
+- comparator logic galat likh dena
+- equal elements handling me bug kar dena
+- full sorting kar dena jab partial answer enough ho
+
+## 45. Comparator mistakes
+
+Custom sorting me common issues:
+- incorrect comparison logic
+- tie cases ignore kar dena
+- ascending/descending mix up
+- transitivity break kar dena
+
+Comparator logic clear nahi hua to sort ka result unpredictable lag sakta hai.
+
+## 46. Time complexity overview
+
+Typical comparison:
 
 - Bubble Sort = `O(n^2)`
 - Selection Sort = `O(n^2)`
-- Insertion Sort = `O(n^2)`
+- Insertion Sort = `O(n^2)` but adaptive
 - Merge Sort = `O(n log n)`
 - Quick Sort average = `O(n log n)`
 - Quick Sort worst = `O(n^2)`
 - Heap Sort = `O(n log n)`
 - Counting Sort = `O(n + k)`
-- Radix Sort = `O(nk)`
-- Shell Sort = gap sequence dependent
+- Radix Sort = digit count dependent
+- Bucket Sort = distribution dependent
 - QuickSelect average = `O(n)`
 
-## 17. Quick revision summary
+## 47. Space complexity overview
 
-- Bubble and Insertion stable hote hain
-- Selection, Quick, Heap, Shell usually unstable hote hain
-- Merge Sort stable aur divide and conquer based hota hai
-- Quick Sort in-place hota hai aur practical bohot important hai
-- Counting Sort aur Radix Sort non-comparison style sorting me aate hain
-- `Arrays.sort()` primitive arrays me Dual-Pivot QuickSort use karta hai
-- Dutch National Flag, intervals, QuickSelect aur parity sorting common interview questions hain
+- Bubble Sort = `O(1)`
+- Selection Sort = `O(1)`
+- Insertion Sort = `O(1)`
+- Merge Sort = `O(n)` standard
+- Quick Sort = recursion stack dependent
+- Heap Sort = `O(1)` extra
+- Counting Sort = range dependent
+- Radix Sort = output/count arrays dependent
 
-## 18. Final takeaway
+## 48. Stability overview
 
-Sorting DSA ka core topic hai jo bohot saare problems ko simplify karta hai.
+Usually stable:
+- Bubble Sort
+- Insertion Sort
+- Merge Sort
+- Counting Sort stable version
+- Radix Sort when stable subroutine use hoti hai
 
-Java interview ke liye most important practical points:
+Usually unstable:
+- Selection Sort
+- Quick Sort
+- Heap Sort
+- Shell Sort
 
-- `Arrays.sort()`
-- merge sort recursion
-- quick sort partition logic
-- heap sort idea
-- counting/radix sort use cases
-- QuickSelect
-- interval sorting patterns
+## 49. Must-Know Complexity Snapshot
 
-Agar sorting strong ho gayi, to searching, greedy, intervals, two pointers aur custom comparator problems kaafi easy ho jaati hain.
+Interview level par in algorithms ki time aur space complexity yaad honi chahiye:
+
+| Algorithm | Best | Average | Worst | Space | Stable |
+| --- | --- | --- | --- | --- | --- |
+| Bubble Sort | `O(n)` | `O(n^2)` | `O(n^2)` | `O(1)` | Yes |
+| Selection Sort | `O(n^2)` | `O(n^2)` | `O(n^2)` | `O(1)` | No |
+| Insertion Sort | `O(n)` | `O(n^2)` | `O(n^2)` | `O(1)` | Yes |
+| Merge Sort | `O(n log n)` | `O(n log n)` | `O(n log n)` | `O(n)` | Yes |
+| Quick Sort | `O(n log n)` | `O(n log n)` | `O(n^2)` | recursion dependent | No |
+| Heap Sort | `O(n log n)` | `O(n log n)` | `O(n log n)` | `O(1)` | No |
+| Counting Sort | `O(n + k)` | `O(n + k)` | `O(n + k)` | `O(k)` | Yes in stable version |
+| Radix Sort | digit dependent | digit dependent | digit dependent | output dependent | Yes if sub-sort stable ho |
+
+## 50. Common Interview Q&A
+
+### Quick Sort ka worst case kab hota hai?
+
+Jab pivot repeatedly sabse chhota ya sabse bada element ban jaye.
+Ye already sorted ya reverse sorted input par ho sakta hai if pivot choice poor ho.
+Is case me partition highly unbalanced ho jata hai aur time `O(n^2)` tak ja sakta hai.
+
+### Merge Sort vs Quick Sort kab use karein?
+
+Merge Sort:
+- guaranteed `O(n log n)`
+- stable sorting chahiye
+- linked list sorting me useful
+
+Quick Sort:
+- practical average performance strong
+- in-place behavior
+- cache friendly
+
+### Linked List ko sort karna ho to kaunsa algorithm best hota hai?
+
+Usually Merge Sort.
+Reason:
+- linked list me random access nahi hota
+- merge operation natural hoti hai
+- Quick Sort linked list par itni natural nahi hoti
+
+## 51. Quick revision sheet
+
+- Sorting data ko ordered form me arrange karta hai.
+- Algorithm choice time, space, stability, aur input nature par depend karti hai.
+- Stable sort equal elements ka order preserve karti hai.
+- In-place sort extra memory kam use karti hai.
+- Merge Sort guaranteed `O(n log n)` deti hai.
+- Quick Sort practical aur fast hoti hai but worst case weak ho sakta hai.
+- Heap Sort in-place guaranteed `O(n log n)` deti hai.
+- Counting/Radix range ya digit based cases me strong hote hain.
+- Har problem me full sorting zaroori nahi hoti.
+
+## 52. Final takeaway
+
+Sorting ka real mastery point ye nahi ki tum sab algorithms ka code rat lo. Real mastery tab hoti hai jab tum problem dekhkar turant samajh pao:
+
+- simple sort enough hai
+- stable sort chahiye
+- in-place chahiye
+- partial selection enough hai
+- counting/radix fit baithegi
+- greedy ya two pointers sort ke baad easy ho jayenge
+
+Sorting strong ho gayi to searching, intervals, greedy, heaps, custom comparator, aur kaafi interview patterns automatically easy lagne lagte hain.
