@@ -9,6 +9,30 @@ Core thinking:
 - baaki problem recursive call par chhod do
 - base case aane par recursion ruk jaati hai
 
+## 1.1 Recursion ka Java syntax
+
+Recursion me base case aur recursive call ka structure yeh hota hai:
+
+```java
+public static int factorial(int n) {
+    if (n <= 1) {
+        return 1; // base case
+    }
+    return n * factorial(n - 1); // recursive case
+}
+
+public static void printReverse(String s, int idx) {
+    if (idx < 0) return;
+    System.out.print(s.charAt(idx));
+    printReverse(s, idx - 1);
+}
+```
+
+Important syntax points:
+- base case condition sabse pehle check karo
+- recursive call ko smaller input ke saath do
+- function call stack unwind hota hai jab base case milta hai
+
 ## 2. Recursion kyun important hai?
 
 Recursion DSA me isliye important hai kyunki:
@@ -609,3 +633,103 @@ Agar tum problem dekhkar ye identify kar pao ki:
 - ye subsets/permutations/combinations/constraint backtracking hai
 
 to recursion folder ka real purpose complete ho jaata hai.
+
+## Recursion & Backtracking — Complete Interview Guide
+
+### ⚠️ Basic distinction
+- Recursion = function khud ko call karta hai.
+- Backtracking = recursion + undo jab wrong path mile.
+
+### Part 1 — Pure Recursion Problems (Service-based / Mid tier)
+Common easy-medium recursion problems:
+- Fibonacci Number (#509) — TCS, Wipro, All
+- Power of Two (#231) — TCS, Infosys
+- Reverse String (#344) — Wipro, Capgemini
+- Palindrome Check (recursion) (#125) — TCS, Cognizant
+- Climbing Stairs (#70) — Amazon, Google, Microsoft
+- Pow(x, n) (#50) — Amazon, Adobe, Google
+- Reverse Linked List (recursion) (#206) — Amazon, Microsoft
+- Merge Two Sorted Lists (#21) — Amazon, Microsoft, Google
+
+### Part 2 — Backtracking (FAANG core patterns)
+Backtracking patterns ka samajh bahut zaroori hai:
+- Subsets / Power Set
+- Permutations
+- Combinations / Combination Sum
+- Constraint satisfaction problems
+
+#### Subtype 1: Subsets / Power Set
+- Har element ya to include hota hai ya exclude
+- Time complexity typically `O(2^n)`
+- Examples: Subsets (#78), Subsets II (#90), Non-decreasing Subsequences (#491)
+
+#### Subtype 2: Permutations
+- Order matters
+- Time complexity roughly `O(n × n!)`
+- Examples: Permutations (#46), Permutations II (#47), Next Permutation (#31), Permutation in String (#567)
+
+#### Subtype 3: Combinations / Combination Sum
+- Order nahi matter karta
+- Start index ya reuse logic zaroori hoti hai
+- Examples: Combinations (#77), Combination Sum (#39), Combination Sum II (#40), Combination Sum III (#216), Letter Combinations of Phone Number (#17)
+
+#### Subtype 4: Constraint Satisfaction
+- Rules ke saath valid arrangement dhoondhna hota hai
+- Examples: Generate Parentheses (#22), Word Search (#79), Palindrome Partitioning (#131), Restore IP Addresses (#93), N-Queens (#51), Sudoku Solver (#37), Word Break II (#140)
+
+### Universal Backtracking Template — Java
+```java
+List<List<Integer>> result = new ArrayList<>();
+
+void backtrack(int[] nums, int start, List<Integer> current) {
+    result.add(new ArrayList<>(current));
+    // if (current.size() == target) return; // for fixed-size answers
+
+    for (int i = start; i < nums.length; i++) {
+        if (i > start && nums[i] == nums[i - 1]) continue; // duplicate pruning
+
+        current.add(nums[i]);
+        backtrack(nums, i + 1, current); // for subsets/combinations
+        // backtrack(nums, i, current); // for combination sum allowing reuse
+        current.remove(current.size() - 1);
+    }
+}
+```
+
+### Decision tree — pattern identify karo
+- Sabhi possible arrangements chahiye?
+  - YES → order matters? → permutation
+  - NO → combination/subset
+- Constraints follow karne hain?
+  - grid/matrix → word search, sudoku
+  - valid string structure → parentheses, palindrome partitioning
+  - placement problem → N-Queens, restore IP
+- Duplicates hain input mein?
+  - YES → sort + skip duplicates
+  - NO → direct backtracking
+
+### Company-wise guide
+- TCS / Wipro / Infosys: basic recursion, reverse string, palindrome recursion
+- Cognizant / Capgemini: string recursion, simple backtracking
+- Amazon: Letter Combinations, Subsets, Word Search, Generate Parentheses
+- Microsoft: Permutations, Palindrome Partitioning, N-Queens
+- Google: N-Queens, Sudoku Solver, Word Break II, hard backtracking variants
+- Meta: Subsets, Permutations, progressive follow-ups
+
+### Must-do problems
+- #78 Subsets
+- #46 Permutations
+- #39 Combination Sum
+- #22 Generate Parentheses
+- #79 Word Search
+- #51 N-Queens
+
+### Key complexity rules
+- Subsets: `O(2^n)`
+- Permutations: `O(n × n!)`
+- Combinations: `O(n choose k)`
+- Constraint grid search: worst `O(4^n)`
+
+### Final recursion-backtracking tip
+Recursion strong ho tab tum problem ko call stack aur base case se turant solve kar sakte ho.
+Backtracking strong ho tab tum choice, explore, undo ka pattern carry karke FAANG-style hard problems bhi handle kar sakte ho.

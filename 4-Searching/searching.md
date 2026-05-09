@@ -55,6 +55,19 @@ Yahi questions decide karte hain ki linear search lagegi, binary search lagegi, 
 
 Linear search sabse simple search hoti hai. Isme hum data ko start se end tak dekhte hain aur har element ko target se compare karte hain.
 
+Java syntax example:
+
+```java
+public static int linearSearch(int[] arr, int target) {
+    for (int i = 0; i < arr.length; i++) {
+        if (arr[i] == target) {
+            return i; // first matching index
+        }
+    }
+    return -1;
+}
+```
+
 Use cases:
 - unsorted array
 - chhota input size
@@ -84,6 +97,27 @@ Main idea:
 - aadha search space eliminate kar do
 
 Binary search ka power isi me hai ki har step me search space half ho jata hai.
+
+Java syntax example:
+
+```java
+public static int binarySearch(int[] arr, int target) {
+    int lo = 0;
+    int hi = arr.length - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (arr[mid] == target) {
+            return mid;
+        }
+        if (arr[mid] < target) {
+            lo = mid + 1;
+        } else {
+            hi = mid - 1;
+        }
+    }
+    return -1;
+}
+```
 
 ## 7. Binary Search ke liye necessary condition
 
@@ -664,3 +698,86 @@ Jab tak tum ye nahi samajhte ki:
 tab tak binary search aur searching patterns weak lagenge.
 
 Agar searching strong ho gayi, to arrays, matrices, optimization, aur many interview hard problems kaafi manageable lagne lagte hain.
+## Searching — Complete LeetCode Guide
+
+### 1. Searching ke 3 interview types
+- Classic Binary Search → sorted array
+- Binary Search on Rotated → rotated sorted array
+- Binary Search on Answer → answer space par monotonic feasibility check
+
+### 2. Tier wise problem list
+#### Service based
+- #704 Binary Search
+- #35 Search Insert Position
+- #278 First Bad Version
+- #69 Sqrt(x)
+- #374 Guess Number Higher or Lower
+- #34 Find First and Last Position in Sorted Array
+- #74 Search a 2D Matrix
+
+#### Mid / product based
+- #162 Find Peak Element
+- #153 Find Minimum in Rotated Sorted Array
+- #33 Search in Rotated Sorted Array
+- #81 Search in Rotated Sorted Array II
+- #436 Find Right Interval
+- #378 Kth Smallest in Sorted Matrix
+
+#### FAANG / hard
+- #33 Search in Rotated Sorted Array
+- #153 Find Minimum in Rotated Sorted Array
+- #215 Kth Largest Element in Array
+- #162 Find Peak Element
+- #4 Median of Two Sorted Arrays
+- #410 Split Array Largest Sum
+- #981 Time Based Key-Value Store
+
+### 3. Binary Search on Answer — trending 2025
+- #875 Koko Eating Bananas
+- #1011 Capacity to Ship Packages in D Days
+- #410 Split Array Largest Sum
+- #1482 Minimum Number of Days to Make Bouquets
+- #1283 Find Smallest Divisor Given Threshold
+- Aggressive Cows / Allocate Books / Minimize Max Distance
+
+### 4. Java templates
+#### Classic binary search
+```java
+int lo = 0, hi = nums.length - 1;
+while (lo <= hi) {
+    int mid = lo + (hi - lo) / 2;
+    if (nums[mid] == target) return mid;
+    else if (nums[mid] < target) lo = mid + 1;
+    else hi = mid - 1;
+}
+```
+
+#### Binary search on answer
+```java
+int lo = minPossible, hi = maxPossible;
+int ans = hi;
+while (lo <= hi) {
+    int mid = lo + (hi - lo) / 2;
+    if (isPossible(mid)) {
+        ans = mid;
+        hi = mid - 1; // minimize
+    } else {
+        lo = mid + 1;
+    }
+}
+```
+
+### 5. Pattern mapping
+- Sorted array + find → classic binary search
+- Rotated array → modified binary search
+- Peak / mountain → binary search on slope
+- Minimum of maximum → binary search on answer
+- Maximum of minimum → binary search on answer
+- Minimize days/speed/weight → binary search on answer
+
+### 6. Must-do searching problems
+- #33 Search in Rotated Sorted Array
+- #875 Koko Eating Bananas
+- #4 Median of Two Sorted Arrays
+- #34 First and Last Position in Sorted Array
+- #1011 Capacity to Ship Packages in D Days

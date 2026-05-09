@@ -34,6 +34,31 @@ Is property ka impact:
 - string pool possible hota hai
 - loop me repeated concatenation costly ho sakta hai
 
+## 3.1 String ka Java syntax
+
+Java me string use karne ka common syntax yeh hai:
+
+```java
+String s = "hello";
+String t = new String("world");
+
+int len = s.length();
+char c = s.charAt(1);
+String sub = s.substring(1, 4); // [1, 4)
+boolean eq = s.equals("hello");
+int cmp = s.compareTo("abc");
+
+String joined = s + " " + t;
+StringBuilder sb = new StringBuilder();
+sb.append("hello").append(" world");
+String result = sb.toString();
+```
+
+Important syntax points:
+- string comparison ke liye `equals()` use karo, `==` reference compare karta hai
+- `substring(start, end)` me end exclusive hota hai
+- `StringBuilder` repeated modifications ke liye efficient hota hai
+
 ## 4. String, character aur text representation
 
 String ek sequence hota hai characters ka. Har character internally Unicode system par based hota hai.
@@ -768,3 +793,67 @@ String mastery ka matlab sirf methods ya syntax yaad karna nahi hai. Real master
 - ya `StringBuilder` performance ke liye zaroori hai
 
 Strings strong ho gaye to parsing, hashing, sliding window, pattern matching aur kaafi interview categories naturally easy lagne lagti hain.
+
+## String Problems — Company-Wise Complete Guide
+
+### Tier 1 — Service based
+- #344 Reverse a String — TCS, Wipro, Capgemini
+- #125 Valid Palindrome — TCS, Infosys, Cognizant
+- #151 Reverse Words in a String — Wipro, Accenture
+- #14 Longest Common Prefix — Wipro, TCS
+- #38 Count and Say — Infosys, HCL
+- #242 Valid Anagram — Cognizant, TCS
+- #387 First Unique Character — Infosys, Capgemini
+- #28 Implement strStr() — TCS, Wipro
+- #1047 Remove Duplicates from String — Accenture, Cognizant
+- #13 Roman to Integer — TCS, Infosys
+
+### Tier 2 — Mid product based
+- #3 Longest Substring Without Repeating Characters — Adobe, Flipkart
+- #49 Group Anagrams — Adobe, Atlassian
+- #5 Longest Palindromic Substring — Flipkart, Paytm
+- #8 String to Integer (atoi) — Adobe, Paytm
+- #20 Valid Parentheses — Paytm, Swiggy
+- #271 Encode and Decode Strings — Atlassian, PhonePe
+- #438 Find All Anagrams in String — Adobe, Flipkart
+- #131 Palindrome Partitioning — Paytm, Zomato
+
+### Tier 3 — FAANG / top MNCs
+- #3 Longest Substring Without Repeating Characters — Netflix, Microsoft, Amazon
+- #424 Longest Repeating Character Replacement — Google, Amazon
+- #76 Minimum Window Substring — Amazon, Google, Meta
+- #49 Group Anagrams — Microsoft, Meta, Amazon
+- #680 Valid Palindrome II — Meta, Amazon
+- #647 Palindromic Substrings — Amazon, Google
+- #139 Word Break — Amazon, Google, Microsoft
+- #79 Word Search — Microsoft, Amazon, Meta
+- #297 Serialize and Deserialize String — Google, Amazon
+- #44 Wildcard Matching — Google, Meta
+
+### Key string patterns
+- Sliding window → longest substring, minimum window, anagram search
+- Two pointers → palindrome, reverse, compare ends
+- Frequency / hashing → anagram, duplicates, first unique
+- Prefix / suffix → common prefix, pattern matching
+- Parsing / tokenization → `atoi`, reverse words, expression handling
+- Backtracking strings → word search, palindrome partitioning
+- DP strings → word break, wildcard matching
+
+### Must-do string problems
+- #3 Longest Substring Without Repeating Characters
+- #49 Group Anagrams
+- #5 Longest Palindromic Substring
+- #76 Minimum Window Substring
+- #139 Word Break
+
+### Java tip
+- `StringBuilder` for repeated concatenation
+- `equals()` over `==`
+- `substring(start,end)` end exclusive
+- normalize input before comparison when case / spaces matter
+
+### Company mapping summary
+- TCS / Wipro / Infosys: basic string manipulation, reverse, palindrome, anagram
+- Adobe / Flipkart / Paytm: sliding window, string parsing, DP strings
+- Amazon / Microsoft: word search, backtracking string variants
+- Google / Meta: wildcard, DP string challenges, complex pattern matching

@@ -64,6 +64,44 @@ Examples:
 - Radix Sort
 - Bucket Sort
 
+## 4.1 Sorting ka Java syntax
+
+Sorting ke liye Java me built-in aur manual dono tarike use ho sakte hain:
+
+```java
+int[] arr = {5, 2, 8, 1};
+Arrays.sort(arr); // ascending order
+
+for (int i = 0; i < arr.length; i++) {
+    System.out.print(arr[i] + " ");
+}
+
+// bubble sort example
+for (int i = 0; i < arr.length - 1; i++) {
+    for (int j = 0; j < arr.length - 1 - i; j++) {
+        if (arr[j] > arr[j + 1]) {
+            int temp = arr[j];
+            arr[j] = arr[j + 1];
+            arr[j + 1] = temp;
+        }
+    }
+}
+
+// merge sort pattern
+public static void mergeSort(int[] arr, int lo, int hi) {
+    if (lo >= hi) return;
+    int mid = lo + (hi - lo) / 2;
+    mergeSort(arr, lo, mid);
+    mergeSort(arr, mid + 1, hi);
+    merge(arr, lo, mid, hi);
+}
+```
+
+Important syntax points:
+- `Arrays.sort(...)` ready-made solution hai
+- manual sort me nested loops ya divide-and-conquer use hota hai
+- stable sorting aur in-place sorting check karna zaroori hota hai
+
 ## 5. Comparison sorts ka theoretical limit
 
 Comparison-based sorting ka best general lower bound `O(n log n)` hota hai.
@@ -757,3 +795,90 @@ Sorting ka real mastery point ye nahi ki tum sab algorithms ka code rat lo. Real
 - greedy ya two pointers sort ke baad easy ho jayenge
 
 Sorting strong ho gayi to searching, intervals, greedy, heaps, custom comparator, aur kaafi interview patterns automatically easy lagne lagte hain.
+
+## Sorting — Complete Interview Guide
+
+### 1. Sorting interview ke 2 parts
+- Part 1: algorithms theory + implementation
+- Part 2: sorting-based problems
+
+### 2. Must-know algorithms
+| Algorithm | Best | Average | Worst | Space | Stable | Common companies |
+|---|---|---|---|---|---|---|
+| Bubble Sort | O(n) | O(n²) | O(n²) | O(1) | ✅ | TCS, Wipro |
+| Selection Sort | O(n²) | O(n²) | O(n²) | O(1) | ❌ | Infosys, Capgemini |
+| Insertion Sort | O(n) | O(n²) | O(n²) | O(1) | ✅ | TCS, Cognizant |
+| Merge Sort | O(n log n) | O(n log n) | O(n log n) | O(n) | ✅ | Amazon, Google, Microsoft |
+| Quick Sort | O(n log n) | O(n log n) | O(n²) | O(log n) | ❌ | Amazon, Google, Meta |
+| Heap Sort | O(n log n) | O(n log n) | O(n log n) | O(1) | ❌ | Google, Amazon |
+| Counting Sort | O(n + k) | O(n + k) | O(n + k) | O(k) | ✅ | Amazon, Adobe |
+| Radix Sort | O(nk) | O(nk) | O(nk) | O(n + k) | ✅ | Google, Bloomberg |
+
+### 3. Key interview questions
+- QuickSort worst case kab hota hai? → already sorted / bad pivot → O(n²)
+- MergeSort vs QuickSort? → stable/linked list = Merge ; in-place average = Quick
+- Linked list sort karna ho toh? → MergeSort
+- Custom sort chahiye toh? → comparator + sort logic
+
+### 4. Tiered problem list
+#### Service based
+- #75 Sort Colors
+- #88 Merge Sorted Array
+- #217 Contains Duplicate
+- #179 Largest Number
+- #1122 Relative Sort Array
+- #242 Valid Anagram
+
+#### Mid / product based
+- #56 Merge Intervals
+- #57 Insert Interval
+- #253 Meeting Rooms II
+- #451 Sort Characters by Frequency
+- #347 Top K Frequent Elements
+- #324 Wiggle Sort II
+- #215 Kth Largest Element
+
+#### FAANG / hard
+- #23 Merge k Sorted Lists
+- #148 Sort List
+- #315 Count of Smaller Numbers
+- #164 Maximum Gap
+- #274 H-Index
+- #435 Non-overlapping Intervals
+- #759 Employee Free Time
+
+### 5. Custom sorting pattern
+- Compare combined strings for Largest Number
+- Frequency sort with map + comparator
+- Order by multiple keys using comparator chain
+
+### 6. FAANG favourite patterns
+- interval problems → sort by start time
+- k largest/smallest → QuickSelect / Min-Heap
+- frequency based → hashmap + custom comparator
+- 0/1/2 categories → Dutch Flag
+- merge two sorted lists → two-pointer merge
+- sort linked list → MergeSort on LL
+
+### 7. Priority practice
+- Algorithm theory + implementation: Merge, Quick, Heap, Counting
+- Easy sorting problems: 4–5
+- Medium sorting problems: 8–10
+- Hard sorting problems: 2–3
+- Total targeted problems: ~20
+
+### 8. Top 5 must-do sorting problems
+- #75 Sort Colors
+- #56 Merge Intervals
+- #148 Sort List
+- #347 Top K Frequent Elements
+- #937 Reorder Data in Log Files
+
+### 9. Custom comparator template — Java
+```java
+Arrays.sort(nums, (a, b) -> {
+    String s1 = a + "" + b;
+    String s2 = b + "" + a;
+    return s2.compareTo(s1);
+});
+```

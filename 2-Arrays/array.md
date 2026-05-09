@@ -34,6 +34,36 @@ Default values:
 - `boolean` array me default `false`
 - object array me default `null`
 
+## 3.1 Array ka Java syntax
+
+Java me array declare, initialize aur use karne ka syntax yeh hota hai:
+
+```java
+// 1D array declaration
+int[] arr = new int[5];
+int[] nums = {10, 20, 30, 40, 50};
+
+// access and update
+int first = nums[0];
+nums[2] = 100;
+
+// length and traversal
+int n = nums.length;
+for (int i = 0; i < n; i++) {
+    System.out.println(nums[i]);
+}
+
+// 2D array declaration
+int[][] matrix = new int[3][3];
+matrix[0][1] = 7;
+```
+
+Important syntax points:
+- `arr.length` ek property hoti hai, method nahi
+- index `0` se start hoti hai
+- `i < arr.length` se out-of-bounds se bacha ja sakta hai
+- fixed-size array me size construct karte waqt decide hota hai
+
 ## 4. Array kyun important hai?
 
 DSA ki bohot saari techniques arrays se hi start hoti hain. Array strong ho gaya to bahut saare topics automatically easy lagne lagte hain.

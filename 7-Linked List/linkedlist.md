@@ -21,6 +21,42 @@ Doubly linked list node ke paas hota hai:
 - next reference
 - prev reference
 
+## 2.1 Linked list ka Java syntax
+
+Singly linked list ka basic node aur traversal kuch is tarah dikhta hai:
+
+```java
+static class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public static void traverse(Node head) {
+    Node current = head;
+    while (current != null) {
+        System.out.print(current.data + " -> ");
+        current = current.next;
+    }
+    System.out.println("null");
+}
+
+public static Node insertAtHead(Node head, int value) {
+    Node newNode = new Node(value);
+    newNode.next = head;
+    return newNode;
+}
+```
+
+Important syntax points:
+- `head` linked list start hota hai
+- insertion aur deletion me pointers ko carefully update karo
+- singly linked list me traversal sequential hoti hai, random access nahi
+
 ## 3. Head kya hota hai?
 
 Head linked list ka starting node reference hota hai.
