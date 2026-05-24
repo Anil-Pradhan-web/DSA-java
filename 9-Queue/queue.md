@@ -1,16 +1,13 @@
-# Queues in Java for DSA
+# Queue in Java for DSA
 
 ## 1. Queue kya hota hai?
 
 Queue ek linear data structure hota hai jo **FIFO** principle follow karta hai.
 
 FIFO ka full form:
-
 - First In First Out
 
-Matlab jo element sabse pehle insert hua hai, wahi sabse pehle remove hoga.
-
-Example:
+Matlab jo element sabse pehle insert hua, wahi sabse pehle remove hoga.
 
 ```text
 Enqueue 10
@@ -21,19 +18,117 @@ Front -> 10 20 30 <- Rear
 Dequeue -> 10
 ```
 
-## 2. Basic queue operations
+## 2. Queue interview me kyun important hai?
 
-- `offer()` / `add()` -> enqueue
-- `poll()` / `remove()` -> dequeue
-- `peek()` -> front element dekho
-- `isEmpty()` -> queue empty hai ya nahi
-- `size()` -> number of elements
+Queue sirf basic data structure nahi hai. Interview me queue multiple forms me aati hai:
+- normal FIFO processing
+- circular queue design
+- deque based sliding window
+- BFS traversal in trees, graphs, and grids
+- monotonic deque for optimized window problems
+- priority queue for scheduling and heap-style problems
 
-## 3. Queue using arrays
+## 3. Queue ke 4 interview forms
 
-Array based queue me `front` aur `rear` pointers maintain karte hain.
+### Form 1: Basic Queue / Circular Queue
 
-### Java code
+Ye TCS/Wipro level par common hota hai.
+
+Focus:
+- enqueue
+- dequeue
+- front/rear
+- circular queue modulo logic
+
+### Form 2: Deque
+
+Deque ka full form hai Double Ended Queue.
+
+Isme dono ends se add/remove kar sakte ho.
+
+Focus:
+- sliding window
+- palindrome style logic
+- both-side processing
+
+### Form 3: BFS Queue
+
+BFS me queue ka use level by level traversal ke liye hota hai.
+
+Use cases:
+- binary tree level order
+- graph shortest path
+- grid spread problems
+- rotten oranges
+- word ladder
+
+### Form 4: Monotonic Deque
+
+Ye FAANG-style important pattern hai.
+
+Use cases:
+- sliding window maximum
+- jump game VI
+- longest subarray with limit
+- max/min window optimization
+
+## 4. Basic queue operations
+
+Core operations:
+- `offer(x)` -> enqueue
+- `poll()` -> dequeue
+- `peek()` -> front element
+- `isEmpty()` -> empty check
+- `size()` -> current size
+
+Ideal complexity:
+- enqueue = `O(1)`
+- dequeue = `O(1)`
+- peek = `O(1)`
+
+## 5. Java Queue Cheatsheet
+
+### Standard Queue
+
+```java
+Queue<Integer> queue = new LinkedList<>();
+queue.offer(x);
+queue.poll();
+queue.peek();
+queue.isEmpty();
+```
+
+### Better option for normal queue
+
+```java
+Queue<Integer> queue = new ArrayDeque<>();
+queue.offer(x);
+queue.poll();
+queue.peek();
+```
+
+### Deque
+
+```java
+Deque<Integer> deque = new ArrayDeque<>();
+deque.offerFirst(x);
+deque.offerLast(x);
+deque.pollFirst();
+deque.pollLast();
+deque.peekFirst();
+deque.peekLast();
+```
+
+### PriorityQueue
+
+```java
+PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+```
+
+## 6. Queue using array
+
+Array queue me `front`, `rear`, aur `size` maintain karte hain.
 
 ```java
 static class ArrayQueue {
@@ -49,7 +144,7 @@ static class ArrayQueue {
         size = 0;
     }
 
-    public void enqueue(int value) {
+    void enqueue(int value) {
         if (size == arr.length) {
             throw new RuntimeException("Queue Overflow");
         }
@@ -58,7 +153,7 @@ static class ArrayQueue {
         size++;
     }
 
-    public int dequeue() {
+    int dequeue() {
         if (isEmpty()) {
             throw new RuntimeException("Queue Underflow");
         }
@@ -68,93 +163,31 @@ static class ArrayQueue {
         return value;
     }
 
-    public int peek() {
+    int peek() {
         if (isEmpty()) {
-            throw new RuntimeException("Queue is empty");
+            throw new RuntimeException("Queue Empty");
         }
         return arr[front];
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return size == 0;
     }
 }
 ```
 
-### Note
+Issue:
+- repeated dequeue ke baad front aage badhta rahega
+- unused space waste ho sakti hai
 
-Ye simple array queue hai. Isme repeated dequeue ke baad front aage badhta jayega aur wasted space issue aa sakta hai. Is problem ko circular queue solve karti hai.
+Circular queue isko solve karti hai.
 
-## 4. Queue using linked list
+## 7. Circular Queue
 
-Linked list based queue me:
+Circular queue me array ko ring ki tarah use karte hain.
 
-- enqueue rear par hota hai
-- dequeue front se hota hai
-
-### Java code
-
-```java
-static class Node {
-    int data;
-    Node next;
-
-    Node(int data) {
-        this.data = data;
-    }
-}
-
-static class LinkedListQueue {
-    Node front;
-    Node rear;
-
-    public void enqueue(int value) {
-        Node newNode = new Node(value);
-
-        if (rear == null) {
-            front = rear = newNode;
-            return;
-        }
-
-        rear.next = newNode;
-        rear = newNode;
-    }
-
-    public int dequeue() {
-        if (isEmpty()) {
-            throw new RuntimeException("Queue Underflow");
-        }
-
-        int value = front.data;
-        front = front.next;
-
-        if (front == null) {
-            rear = null;
-        }
-
-        return value;
-    }
-
-    public int peek() {
-        if (isEmpty()) {
-            throw new RuntimeException("Queue is empty");
-        }
-        return front.data;
-    }
-
-    public boolean isEmpty() {
-        return front == null;
-    }
-}
-```
-
-## 5. Circular Queue (Ring Buffer)
-
-Circular queue me array ko circular manner me use karte hain.
-
-Isse wasted space problem solve hoti hai.
-
-### Java code
+Key formula:
+- next index = `(index + 1) % capacity`
 
 ```java
 static class CircularQueue {
@@ -170,356 +203,403 @@ static class CircularQueue {
         size = 0;
     }
 
-    public void enqueue(int value) {
-        if (size == arr.length) {
-            throw new RuntimeException("Queue Overflow");
-        }
-
+    boolean enqueue(int value) {
+        if (size == arr.length) return false;
         rear = (rear + 1) % arr.length;
         arr[rear] = value;
         size++;
+        return true;
     }
 
-    public int dequeue() {
-        if (isEmpty()) {
+    boolean dequeue() {
+        if (size == 0) return false;
+        front = (front + 1) % arr.length;
+        size--;
+        return true;
+    }
+
+    int front() {
+        return size == 0 ? -1 : arr[front];
+    }
+
+    int rear() {
+        return size == 0 ? -1 : arr[rear];
+    }
+}
+```
+
+## 8. Queue using linked list
+
+Linked list queue me:
+- enqueue rear par
+- dequeue front se
+
+```java
+static class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+    }
+}
+
+static class LinkedListQueue {
+    Node front;
+    Node rear;
+
+    void enqueue(int value) {
+        Node node = new Node(value);
+
+        if (rear == null) {
+            front = node;
+            rear = node;
+            return;
+        }
+
+        rear.next = node;
+        rear = node;
+    }
+
+    int dequeue() {
+        if (front == null) {
             throw new RuntimeException("Queue Underflow");
         }
 
-        int value = arr[front];
-        front = (front + 1) % arr.length;
-        size--;
-        return value;
-    }
+        int value = front.data;
+        front = front.next;
 
-    public int peek() {
-        if (isEmpty()) {
-            throw new RuntimeException("Queue is empty");
+        if (front == null) {
+            rear = null;
         }
-        return arr[front];
-    }
 
-    public boolean isEmpty() {
-        return size == 0;
+        return value;
     }
 }
 ```
 
-## 6. Deque - Double-ended queue
+## 9. Deque theory
 
-Deque me insert aur delete dono ends se ho sakte hain.
+Deque double-ended queue hota hai.
 
 Operations:
-
 - front se add/remove
-- rear se add/remove
+- back se add/remove
 
-### Java me `ArrayDeque`
-
-```java
-java.util.Deque<Integer> deque = new java.util.ArrayDeque<>();
-deque.addFirst(10);
-deque.addLast(20);
-System.out.println(deque.removeFirst());
-System.out.println(deque.removeLast());
-```
-
-### Use cases
-
-- stack ki tarah use kar sakte ho
-- queue ki tarah use kar sakte ho
+Use cases:
 - sliding window maximum
-- palindrome checks
+- monotonic deque
+- palindrome-like checks
+- BFS variations
 
-## 7. Priority Queue / Min-Max Heap in Java
+## 10. Priority Queue
 
-Priority queue normal queue jaisa nahi hota. Yahan dequeue priority ke basis par hota hai.
+PriorityQueue normal FIFO nahi hoti. Ye priority ke basis par element remove karti hai.
 
-Java me `PriorityQueue` by default **min-heap** hota hai.
+Java me:
+- default `PriorityQueue` min heap hota hai
+- max heap ke liye reverse comparator use karte hain
 
-### Min-heap
-
-```java
-java.util.PriorityQueue<Integer> minHeap = new java.util.PriorityQueue<>();
-minHeap.offer(30);
-minHeap.offer(10);
-minHeap.offer(20);
-System.out.println(minHeap.poll()); // 10
-```
-
-### Max-heap
-
-```java
-java.util.PriorityQueue<Integer> maxHeap =
-    new java.util.PriorityQueue<>(java.util.Collections.reverseOrder());
-maxHeap.offer(30);
-maxHeap.offer(10);
-maxHeap.offer(20);
-System.out.println(maxHeap.poll()); // 30
-```
-
-### Use cases
-
+Use cases:
+- task scheduling
 - kth largest/smallest
-- scheduling problems
-- shortest path style algorithms
-- merge k sorted lists
+- Dijkstra
+- merge k sorted structures
 
-## 8. Monotonic Deque concept
+## 11. BFS kya hota hai?
 
-Monotonic deque me elements ek monotonic order me maintain kiye jaate hain.
+BFS ka full form hai Breadth First Search.
 
-Usually sliding window maximum/minimum jaisi problems me use hota hai.
+Idea:
+- pehle current level process karo
+- phir next level
+- queue current frontier maintain karti hai
 
-### Idea
+BFS important hai because:
+- shortest path in unweighted graph
+- level order traversal
+- multi-source spread problems
+- grid distance problems
 
-- deque me useful candidates hi rakhte hain
-- smaller ya larger unnecessary elements remove kar dete hain
-- front always current best answer hold karta hai
-
-## 9. Applications of queue
-
-- BFS traversal
-- scheduling
-- buffering
-- CPU task handling
-- printer queue
-- stream processing
-- sliding window problems
-
-## 10. In-built Queue in Java
-
-Queue interface commonly `LinkedList` ya `ArrayDeque` ke saath use hota hai.
+## 12. Standard BFS Template for Grid
 
 ```java
-java.util.Queue<Integer> queue = new java.util.LinkedList<>();
-queue.offer(10);
-queue.offer(20);
-System.out.println(queue.poll()); // 10
-System.out.println(queue.peek()); // 20
-```
+Queue<int[]> queue = new LinkedList<>();
+boolean[][] visited = new boolean[m][n];
+int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
-Better modern option for many cases:
+queue.offer(new int[]{startRow, startCol});
+visited[startRow][startCol] = true;
+int steps = 0;
 
-```java
-java.util.Queue<Integer> queue = new java.util.ArrayDeque<>();
-```
+while (!queue.isEmpty()) {
+    int size = queue.size();
 
-## 11. Practice Problems
+    for (int i = 0; i < size; i++) {
+        int[] current = queue.poll();
 
-## 11.1 Implement queue using two stacks
+        for (int[] dir : dirs) {
+            int nr = current[0] + dir[0];
+            int nc = current[1] + dir[1];
 
-```java
-static class MyQueue {
-    java.util.Deque<Integer> stack1 = new java.util.ArrayDeque<>();
-    java.util.Deque<Integer> stack2 = new java.util.ArrayDeque<>();
-
-    public void push(int x) {
-        stack1.push(x);
-    }
-
-    public int pop() {
-        moveIfNeeded();
-        return stack2.pop();
-    }
-
-    public int peek() {
-        moveIfNeeded();
-        return stack2.peek();
-    }
-
-    public boolean empty() {
-        return stack1.isEmpty() && stack2.isEmpty();
-    }
-
-    private void moveIfNeeded() {
-        if (stack2.isEmpty()) {
-            while (!stack1.isEmpty()) {
-                stack2.push(stack1.pop());
+            if (nr >= 0 && nr < m && nc >= 0 && nc < n && !visited[nr][nc]) {
+                visited[nr][nc] = true;
+                queue.offer(new int[]{nr, nc});
             }
         }
     }
+
+    steps++;
 }
 ```
 
-## 11.2 Generate binary numbers from 1 to n using queue
-
-Idea:
-
-- start with `1`
-- front nikalo, print karo
-- usme `0` aur `1` append karke queue me dalo
+## 13. Tree Level Order BFS Template
 
 ```java
-public static java.util.List<String> generateBinaryNumbers(int n) {
-    java.util.List<String> result = new java.util.ArrayList<>();
-    java.util.Queue<String> queue = new java.util.LinkedList<>();
-    queue.offer("1");
+Queue<TreeNode> queue = new LinkedList<>();
+List<List<Integer>> result = new ArrayList<>();
 
-    for (int i = 0; i < n; i++) {
-        String current = queue.poll();
-        result.add(current);
-        queue.offer(current + "0");
-        queue.offer(current + "1");
+if (root != null) {
+    queue.offer(root);
+}
+
+while (!queue.isEmpty()) {
+    int size = queue.size();
+    List<Integer> level = new ArrayList<>();
+
+    for (int i = 0; i < size; i++) {
+        TreeNode node = queue.poll();
+        level.add(node.val);
+
+        if (node.left != null) queue.offer(node.left);
+        if (node.right != null) queue.offer(node.right);
     }
 
-    return result;
+    result.add(level);
 }
 ```
 
-## 11.3 Reverse a queue using recursion
+## 14. Monotonic Deque
+
+Monotonic deque useful candidates ko order me maintain karti hai.
+
+Sliding Window Maximum me:
+- deque indices store karti hai
+- front current window ka maximum hota hai
+- back se smaller values remove hoti hain
+
+## 15. Sliding Window Maximum Template
 
 ```java
-public static void reverseQueue(java.util.Queue<Integer> queue) {
-    if (queue.isEmpty()) {
-        return;
+Deque<Integer> deque = new ArrayDeque<>();
+int[] result = new int[n - k + 1];
+
+for (int i = 0; i < n; i++) {
+    while (!deque.isEmpty() && deque.peekFirst() < i - k + 1) {
+        deque.pollFirst();
     }
 
-    int front = queue.poll();
-    reverseQueue(queue);
-    queue.offer(front);
-}
-```
-
-## 11.4 First non-repeating character in a stream
-
-```java
-public static String firstNonRepeating(String stream) {
-    int[] freq = new int[26];
-    java.util.Queue<Character> queue = new java.util.LinkedList<>();
-    StringBuilder result = new StringBuilder();
-
-    for (char ch : stream.toCharArray()) {
-        freq[ch - 'a']++;
-        queue.offer(ch);
-
-        while (!queue.isEmpty() && freq[queue.peek() - 'a'] > 1) {
-            queue.poll();
-        }
-
-        if (queue.isEmpty()) {
-            result.append('#');
-        } else {
-            result.append(queue.peek());
-        }
+    while (!deque.isEmpty() && nums[deque.peekLast()] < nums[i]) {
+        deque.pollLast();
     }
 
-    return result.toString();
-}
-```
+    deque.offerLast(i);
 
-## 11.5 Sliding window maximum using monotonic deque
-
-```java
-public static int[] maxSlidingWindow(int[] nums, int k) {
-    if (nums.length == 0 || k == 0) {
-        return new int[0];
-    }
-
-    java.util.Deque<Integer> deque = new java.util.ArrayDeque<>();
-    int[] result = new int[nums.length - k + 1];
-    int index = 0;
-
-    for (int i = 0; i < nums.length; i++) {
-        while (!deque.isEmpty() && deque.peekFirst() <= i - k) {
-            deque.pollFirst();
-        }
-
-        while (!deque.isEmpty() && nums[deque.peekLast()] <= nums[i]) {
-            deque.pollLast();
-        }
-
-        deque.offerLast(i);
-
-        if (i >= k - 1) {
-            result[index++] = nums[deque.peekFirst()];
-        }
-    }
-
-    return result;
-}
-```
-
-## 11.6 LRU Cache implementation
-
-Java me `LinkedHashMap` se elegant LRU cache ban sakta hai.
-
-```java
-static class LRUCache extends java.util.LinkedHashMap<Integer, Integer> {
-    private final int capacity;
-
-    LRUCache(int capacity) {
-        super(capacity, 0.75f, true);
-        this.capacity = capacity;
-    }
-
-    public int get(int key) {
-        return super.getOrDefault(key, -1);
-    }
-
-    public void putValue(int key, int value) {
-        super.put(key, value);
-    }
-
-    @Override
-    protected boolean removeEldestEntry(java.util.Map.Entry<Integer, Integer> eldest) {
-        return size() > capacity;
+    if (i >= k - 1) {
+        result[i - k + 1] = nums[deque.peekFirst()];
     }
 }
 ```
 
-### Interview note
+## 16. Queue vs Stack
 
-Classic manual implementation usually:
+### Queue
 
-- doubly linked list
-- hashmap
+- FIFO
+- process oldest first
+- BFS, scheduling
 
-Lekin Java me concept samjhane ke liye `LinkedHashMap` bhi useful hai.
+### Stack
 
-## 12. Common mistakes in queue problems
+- LIFO
+- process newest first
+- DFS, parentheses, backtracking simulation
 
-- `poll()` aur `remove()` ka difference na samajhna
-- circular queue me modulo update bhool jana
-- deque me front/back operation confuse kar dena
+## 17. Queue using Stacks
+
+Two stacks se queue simulate karte hain:
+- input stack
+- output stack
+
+Amortized complexity:
+- `O(1)` per operation
+
+## 18. Stack using Queue
+
+Queue se stack banane ke liye:
+- push ke baad queue rotate kar sakte hain
+- new element front par aa jata hai
+
+## 19. TIER 1 expectation
+
+Service-based companies usually puchte hain:
+- Implement Queue using Stacks
+- Implement Stack using Queues
+- Design Circular Queue
+- Number of Recent Calls
+- First Unique Character
+- Time Needed to Buy Tickets
+- Reveal Cards in Increasing Order
+
+## 20. TIER 2 expectation
+
+Mid product based companies puchte hain:
+- Rotting Oranges
+- Walls and Gates
+- Open the Lock
+- Jump Game III
+- Task Scheduler
+- Design Hit Counter
+
+Focus:
+- BFS
+- simulation
+- queue state management
+
+## 21. TIER 3 expectation
+
+FAANG level queue questions:
+- Binary Tree Level Order
+- Zigzag Level Order
+- Right Side View
+- Word Ladder
+- Number of Islands
+- Shortest Path in Binary Matrix
+- Sliding Window Maximum
+- Jump Game VI
+- Longest Subarray with Limit
+
+## 22. Decision tree
+
+### FIFO processing?
+
+Use basic queue.
+
+### Level by level traversal?
+
+Use BFS queue.
+
+### Grid shortest path or spreading?
+
+Use BFS queue with directions.
+
+### Window max/min?
+
+Use monotonic deque.
+
+### Both ends se add/remove?
+
+Use deque.
+
+### Priority based removal?
+
+Use priority queue.
+
+## 23. Company-wise expectation
+
+### TCS / Wipro
+
+- Queue/Stack implementation
+- Circular Queue
+- Recent Calls
+
+### Infosys / Cognizant
+
+- First Unique Character
+- Basic Queue operations
+- Reveal Cards
+
+### Flipkart / Adobe
+
+- Rotting Oranges
+- Walls and Gates
+- Task Scheduler
+
+### Amazon
+
+- Rotting Oranges
+- Word Ladder
+- Level Order
+- Sliding Window Maximum
+
+### Microsoft
+
+- Level Order Traversal
+- Sliding Window Maximum
+- BFS grid
+
+### Google
+
+- Word Ladder
+- Pacific Atlantic
+- Monotonic Deque
+
+### Meta
+
+- Number of Islands
+- Level Order
+- Right Side View
+
+## 24. Common mistakes
+
+- `poll()` vs `remove()` ka difference ignore karna
+- circular queue me modulo logic bhool jaana
+- BFS me visited mark late karna
+- queue size level loop ke bahar/andar confuse karna
+- deque me front/back confuse karna
 - monotonic deque me outdated indices remove na karna
-- queue using two stacks me transfer logic galat kar dena
+- BFS shortest path me level count galat karna
 
-## 13. Time complexity summary
+## 25. Edge cases
 
-- enqueue/dequeue in array queue = `O(1)`
-- enqueue/dequeue in linked list queue = `O(1)`
+- empty queue
+- single element queue
+- circular queue full/empty
+- grid boundary
+- already visited cells
+- tree root null
+- window size 1
+- window size equals array length
+- unreachable target in BFS
+
+## 26. Time complexity summary
+
+- enqueue/dequeue = `O(1)`
 - circular queue operations = `O(1)`
-- `ArrayDeque` push/pop from ends = `O(1)` amortized
-- priority queue insert/remove = `O(log n)`
-- queue using two stacks = amortized `O(1)`
-- binary numbers generation = `O(n)` strings output aside
-- reverse queue using recursion = `O(n)`
-- first non-repeating in stream = `O(n)`
+- ArrayDeque end operations = `O(1)` amortized
+- PriorityQueue offer/poll = `O(log n)`
+- BFS tree/grid/graph = `O(V + E)` or `O(m * n)`
 - sliding window maximum = `O(n)`
+- queue using stacks = amortized `O(1)`
 
-## 14. Quick revision summary
+## 27. Must-do top queue problems
 
-- queue FIFO principle follow karta hai
-- array, linked list, circular queue se implement kar sakte ho
-- `Deque` double-ended queue hota hai
-- Java me `ArrayDeque` bohot useful hai
-- `PriorityQueue` by default min-heap hota hai
-- monotonic deque sliding window problems me powerful hota hai
-- BFS, scheduling, buffering queue ke common applications hain
+1. `#232 Implement Queue using Stacks`
+2. `#102 Binary Tree Level Order Traversal`
+3. `#994 Rotting Oranges`
+4. `#127 Word Ladder`
+5. `#239 Sliding Window Maximum`
+6. `#200 Number of Islands`
 
-## 15. Final takeaway
+## 28. Final takeaway
 
-Queue DSA ka bohot important topic hai because ye ordering, scheduling, stream processing aur BFS problems ka foundation hai.
+Queue mastery ka matlab sirf FIFO samajhna nahi hai. Real value tab aati hai jab tum identify kar pao:
 
-Java interview ke liye most important practical points:
+- simple queue lagegi
+- BFS level order chahiye
+- grid shortest path hai
+- multi-source BFS hai
+- deque chahiye
+- monotonic deque optimization lagegi
 
-- FIFO principle
-- circular queue
-- `ArrayDeque`
-- `PriorityQueue`
-- monotonic deque
-- queue using two stacks
-- sliding window maximum
-- LRU cache concept
-
-Agar queue strong ho gayi, to BFS, graphs, streaming aur cache-related interview problems kaafi easy lagne lagte hain.
+Queue strong ho gayi to trees, graphs, grid BFS, scheduling, stream processing, aur sliding window problems kaafi manageable ho jaate hain.
