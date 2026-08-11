@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-public class q4 {
+public class q12 {
     /*
-     * Pattern: Heap / HashMap + Min Heap
+     * Pattern: Hashing / Frequency Count + Heap
      * Company Names: Amazon, Google, Meta, Microsoft, Apple
      * Difficulty: Medium
      *
@@ -19,20 +19,19 @@ public class q4 {
      * Example:
      * nums = [1, 1, 1, 2, 2, 3], k = 2
      * Frequency: 1 -> 3, 2 -> 2, 3 -> 1
-     * Top 2 = [1, 2]
+     * Answer = [1, 2]
      *
      * Best idea:
-     * Step 1: HashMap se har element ki frequency count karo.
-     * Step 2: Min heap of size k use karo jisme elements frequency ke basis par
-     * compare honge.
-     * Step 3: Har element ko heap me daalo, agar size k se bada ho to top (sabse
-     * kam frequency) remove karo.
+     * Step 1: HashMap se frequency count karo.
+     * Step 2: Max heap me (frequency, element) daalo.
+     * Step 3: k baar heap se poll karo.
      *
-     * Kyun min heap?
-     * Hum chahte hain ki heap me top k highest frequency elements rahein.
-     * Min heap ka top sabse kam frequency wala hota hai, isliye wo remove hota hai.
+     * Kyun HashMap + Heap?
+     * HashMap frequency O(1) me count karta hai.
+     * Heap se top k elements O(log n) me milte hain.
+     * Total: O(n log n) — sorting ke bina top k efficiently milta hai.
      *
-     * Time Complexity: O(n log k)
+     * Time Complexity: O(n log n)
      * Space Complexity: O(n)
      */
     public static void main(String[] args) {
@@ -48,18 +47,17 @@ public class q4 {
             freq.put(num, freq.getOrDefault(num, 0) + 1);
         }
 
-        // Step 2: Min heap by frequency
-        PriorityQueue<Integer> minHeap = new PriorityQueue<>(
-                (a, b) -> Integer.compare(freq.get(a), freq.get(b)));
+        // Step 2: Max heap by frequency
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(
+                (a, b) -> Integer.compare(freq.get(b), freq.get(a)));
+        maxHeap.addAll(freq.keySet());
 
-        // Step 3: Top k maintain karo
-        for (int key : freq.keySet()) {
-            minHeap.add(key);
-            if (minHeap.size() > k) {
-                minHeap.poll();
-            }
+        // Step 3: Top k nikalo
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < k; i++) {
+            result.add(maxHeap.poll());
         }
 
-        return new ArrayList<>(minHeap);
+        return result;
     }
 }

@@ -2,141 +2,261 @@
 
 ## 1. Hashing kya hota hai?
 
-Hashing ek technique hai jisme hum data ko quickly store aur retrieve karne ke liye hash function use karte hain.
+Hashing ek technique hai jisme hum data ko quickly store aur retrieve karne ke liye hash function use karte hain. Iska main goal hai **fast O(1) operations**.
 
-Goal:
+Simple words me:
+- hashing me ek key ko ek unique index me convert karte hain
+- us index par value store ho jati hai
+- jab wahi key wapas aati hai, to directly us index se value mil jati hai
 
-- fast lookup
-- fast insertion
-- fast deletion
-
-DSA me hashing bohot important hai because:
-
+DSA me hashing bohot important hai kyunki:
 - frequency counting easy ho jata hai
 - duplicate detection fast hota hai
 - pair sum type problems efficient ho jati hain
 - grouping and caching easy hota hai
 
+---
+
 ## 2. Hash function kya hota hai?
 
-Hash function input ko ek integer index ya hash code me convert karta hai.
+Hash function ek aisa function hai jo input (key) ko ek integer index ya hash code me convert karta hai.
 
-Example idea:
-
-```text
+```
 key -> hash function -> bucket/index
 ```
 
-### Good hash function properties
+Example idea:
+```
+"apple" -> hash function -> 42
+"banana" -> hash function -> 17
+```
 
-- deterministic -> same input ka same output
-- uniform -> keys evenly distribute honi chahiye
-- fast -> quickly compute hona chahiye
+### Good hash function ki properties
+
+1. **Deterministic** — same input ka hamesha same output hona chahiye
+2. **Uniform** — keys evenly distribute honi chahiye (sab ek jagah na aayein)
+3. **Fast** — quickly compute hona chahiye
+
+---
 
 ## 3. HashMap in Java
 
-`HashMap` key-value pairs store karta hai.
+`HashMap` key-value pairs store karta hai. Ye sabse commonly use hone wala hashing structure hai.
+
+### Java syntax
+
+```java
+import java.util.HashMap;
+import java.util.Map;
+
+public class HashMapExample {
+    public static void main(String[] args) {
+        // HashMap create karo
+        HashMap<String, Integer> map = new HashMap<>();
+
+        // put — key-value add karo
+        map.put("apple", 3);
+        map.put("banana", 5);
+        map.put("orange", 2);
+
+        // get — value retrieve karo
+        System.out.println(map.get("apple"));  // 3
+        System.out.println(map.get("mango"));  // null (key nahi hai)
+
+        // containsKey — key exist karta hai ya nahi
+        System.out.println(map.containsKey("banana"));  // true
+
+        // remove — key-value delete karo
+        map.remove("orange");
+        System.out.println(map.containsKey("orange"));  // false
+
+        // size — kitni entries hain
+        System.out.println(map.size());  // 2
+
+        // getOrDefault — default value with get
+        System.out.println(map.getOrDefault("mango", 0));  // 0
+    }
+}
+```
 
 ### Important operations
 
-- `put(key, value)`
-- `get(key)`
-- `containsKey(key)`
-- `remove(key)`
+| Method | Kya karta hai |
+|---|---|
+| `put(key, value)` | Key-value add/update karo |
+| `get(key)` | Value retrieve karo (null agar nahi hai) |
+| `containsKey(key)` | Key exist karta hai ya nahi |
+| `remove(key)` | Key-value delete karo |
+| `getOrDefault(key, default)` | Value ya default return karo |
+| `size()` | Entries count karo |
+| `keySet()` | Saari keys ka set |
+| `values()` | Saare values ka collection |
 
-### Java code
+### Iteration ka tarika
 
 ```java
-java.util.HashMap<String, Integer> map = new java.util.HashMap<>();
-map.put("apple", 3);
-map.put("banana", 5);
-System.out.println(map.get("apple")); // 3
+// keySet se iterate karo
+for (String key : map.keySet()) {
+    System.out.println(key + " -> " + map.get(key));
+}
+
+// entrySet se iterate karo (faster)
+for (Map.Entry<String, Integer> entry : map.entrySet()) {
+    System.out.println(entry.getKey() + " -> " + entry.getValue());
+}
 ```
 
 ### Complexity
 
 - average `get/put/remove` = `O(1)`
-- worst case theoretically worse ho sakta hai, but average case `O(1)` hi use karte hain
+- worst case theoretically `O(n)` ho sakta hai collisions ki wajah se, but average case `O(1)` hi use karte hain
+
+---
 
 ## 4. HashSet in Java
 
-`HashSet` unique elements store karta hai.
+`HashSet` sirf unique elements store karta hai. Koi key-value nahi hota, sirf keys.
 
-### Java code
+### Java syntax
 
 ```java
-java.util.HashSet<Integer> set = new java.util.HashSet<>();
-set.add(10);
-set.add(20);
-System.out.println(set.contains(10)); // true
+import java.util.HashSet;
+
+public class HashSetExample {
+    public static void main(String[] args) {
+        HashSet<Integer> set = new HashSet<>();
+
+        // add — element add karo
+        set.add(10);
+        set.add(20);
+        set.add(10);  // duplicate — add nahi hoga
+        System.out.println(set.size());  // 2
+
+        // contains — element hai ya nahi
+        System.out.println(set.contains(10));  // true
+        System.out.println(set.contains(30));  // false
+
+        // remove — element delete karo
+        set.remove(20);
+        System.out.println(set.contains(20));  // false
+
+        // add returns boolean — duplicate rejection detect karo
+        boolean added = set.add(10);
+        System.out.println(added);  // false (already tha)
+    }
+}
 ```
 
-### Complexity
+### HashSet vs HashMap
 
-- average `add/contains/remove` = `O(1)`
+| HashSet | HashMap |
+|---|---|
+| Sirf keys store karta hai | Key-value pairs store karta hai |
+| `add(element)` | `put(key, value)` |
+| `contains(element)` | `containsKey(key)` |
+| `remove(element)` | `remove(key)` |
+| Duplicate add nahi hota | Duplicate key update hota hai |
+
+---
 
 ## 5. LinkedHashMap
 
-`LinkedHashMap` insertion order maintain karta hai.
+`LinkedHashMap` HashMap jaisa hi hai, lekin ye **insertion order maintain** karta hai.
 
-### Java code
+### Java syntax
 
 ```java
-java.util.LinkedHashMap<Integer, String> map = new java.util.LinkedHashMap<>();
-map.put(2, "B");
-map.put(1, "A");
-map.put(3, "C");
-System.out.println(map); // insertion order maintain hota hai
+import java.util.LinkedHashMap;
+
+public class LinkedHashMapExample {
+    public static void main(String[] args) {
+        LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+        map.put(2, "B");
+        map.put(1, "A");
+        map.put(3, "C");
+
+        // Insertion order me iterate hota hai
+        for (Integer key : map.keySet()) {
+            System.out.println(key + " -> " + map.get(key));
+        }
+        // Output: 2 -> B, 1 -> A, 3 -> C
+    }
+}
 ```
 
 ### Use cases
 
-- ordered iteration
-- LRU cache style problems
+- ordered iteration chahiye ho
+- LRU (Least Recently Used) cache style problems
+
+---
 
 ## 6. TreeMap
 
-`TreeMap` keys ko sorted order me store karta hai.
+`TreeMap` keys ko **sorted order** me store karta hai. HashMap jaisa fast nahi hai, lekin ordering guarantee deta hai.
 
-### Java code
+### Java syntax
 
 ```java
-java.util.TreeMap<Integer, String> map = new java.util.TreeMap<>();
-map.put(5, "E");
-map.put(1, "A");
-map.put(3, "C");
-System.out.println(map); // sorted by keys
+import java.util.TreeMap;
+
+public class TreeMapExample {
+    public static void main(String[] args) {
+        TreeMap<Integer, String> map = new TreeMap<>();
+        map.put(5, "E");
+        map.put(1, "A");
+        map.put(3, "C");
+        map.put(2, "B");
+        map.put(4, "D");
+
+        // Sorted by keys
+        for (Integer key : map.keySet()) {
+            System.out.println(key + " -> " + map.get(key));
+        }
+        // Output: 1 -> A, 2 -> B, 3 -> C, 4 -> D, 5 -> E
+
+        // Useful methods
+        System.out.println(map.firstKey());  // 1 (smallest)
+        System.out.println(map.lastKey());   // 5 (largest)
+    }
+}
 ```
 
 ### Complexity
 
-- `put/get/remove` = `O(log n)`
+- `put/get/remove` = `O(log n)` (binary search tree based)
+
+### Map comparison
+
+| Map type | Order | Complexity |
+|---|---|---|
+| `HashMap` | No order | `O(1)` average |
+| `LinkedHashMap` | Insertion order | `O(1)` average |
+| `TreeMap` | Sorted by key | `O(log n)` |
+
+---
 
 ## 7. Collision resolution
 
-Collision tab hota hai jab do different keys same bucket me map ho jayein.
+Collision tab hota hai jab do different keys same hash bucket me map ho jayein. Java me two main techniques hain:
 
 ## 7.1 Chaining
 
-Chaining me har bucket par linked list ya similar structure hota hai.
-
-Idea:
-
-- same bucket wale multiple elements chain ke form me store hote hain
+Chaining me har bucket par ek linked list (ya similar structure) hota hai. Same bucket wale elements chain me store hote hain.
 
 ```text
 bucket[5] -> (A) -> (B) -> (C)
 ```
 
-Java HashMap internally collision handling ke liye chaining idea use karta hai, aur modern implementations me buckets tree bhi ban sakte hain in bad cases.
+Java `HashMap` internally chaining use karta hai. Modern implementations me jab chain bahut lambi ho jati hai (Java 8+ me 8+ elements), to linked list tree me convert ho jati hai for better performance.
 
 ## 7.2 Open Addressing
 
-Open addressing me collision hone par next available slot dhoondte hain.
+Open addressing me collision hone par next available slot dhoondhte hain.
 
 ### Linear probing
 
-Next slot try karo.
+Agar slot occupied hai to next slot try karo:
 
 ```text
 index, index+1, index+2, ...
@@ -144,338 +264,154 @@ index, index+1, index+2, ...
 
 ### Quadratic probing
 
-Quadratic jump use hota hai.
+Quadratic jump se try karo:
 
 ```text
-index + 1^2, index + 2^2, index + 3^2
+index + 1^2, index + 2^2, index + 3^2, ...
 ```
 
 Interview note:
+- Java `HashMap` implementation me chaining use hoti hai
+- open addressing ka use Java me nahi hota, but ye concept interview questions me aa sakta hai
 
-- Java `HashMap` ke conceptual comparison ke liye ye jaana useful hai
-- implementation details alag languages me alag ho sakti hain
+---
 
 ## 8. Load factor and rehashing
 
 ### Load factor
 
-Load factor approx batata hai ki hash table kitna full ho gaya hai.
-
-Formula idea:
+Load factor batata hai ki hash table kitna full ho gaya hai:
 
 ```text
 load factor = number of elements / number of buckets
 ```
 
+Default Java load factor = `0.75` — iska matlab 75% full hone par rehash hota hai.
+
 ### Rehashing
 
-Jab load factor zyada ho jata hai:
+Jab load factor threshold cross hota hai:
+1. nayi (badi) table create hoti hai (usually double size)
+2. saare purane elements ko dubara hash karke nayi table me place kiya jata hai
 
-- new bigger table banti hai
-- old elements dubara hash hoke new table me jate hain
+Isse performance maintain rehti hai aur collisions kam hote hain.
 
-Isse performance maintain rehti hai.
+---
 
-## 9. Applications of hashing
+## 9. Hashing ke important patterns
 
-- frequency counting
-- two sum
-- caching
-- grouping data
-- duplicate detection
-- prefix sum + hashmap
-- sliding window support
+### 9.1 Frequency counting
 
-## 10. Practice Problems
-
-## 10.1 Count frequency of each element
+Sabse common pattern — har element ki kitni baar aayi hai:
 
 ```java
-public static java.util.Map<Integer, Integer> countFrequency(int[] arr) {
-    java.util.Map<Integer, Integer> freq = new java.util.HashMap<>();
-
-    for (int num : arr) {
-        freq.put(num, freq.getOrDefault(num, 0) + 1);
-    }
-
-    return freq;
+Map<Integer, Integer> freq = new HashMap<>();
+for (int num : arr) {
+    freq.put(num, freq.getOrDefault(num, 0) + 1);
 }
 ```
 
-## 10.2 Find intersection and union of two arrays
+### 9.2 Two Sum (complement search)
 
-### Intersection
+Pair find karne ka pattern:
 
 ```java
-public static java.util.Set<Integer> intersection(int[] a, int[] b) {
-    java.util.Set<Integer> set1 = new java.util.HashSet<>();
-    java.util.Set<Integer> result = new java.util.HashSet<>();
-
-    for (int x : a) {
-        set1.add(x);
+Map<Integer, Integer> seen = new HashMap<>();
+for (int i = 0; i < arr.length; i++) {
+    int needed = target - arr[i];
+    if (seen.containsKey(needed)) {
+        // mil gaya pair
     }
-
-    for (int x : b) {
-        if (set1.contains(x)) {
-            result.add(x);
-        }
-    }
-
-    return result;
+    seen.put(arr[i], i);
 }
 ```
 
-### Union
+### 9.3 Prefix sum
+
+Subarray sum problems ke liye:
 
 ```java
-public static java.util.Set<Integer> union(int[] a, int[] b) {
-    java.util.Set<Integer> result = new java.util.HashSet<>();
+Map<Integer, Integer> prefixCount = new HashMap<>();
+prefixCount.put(0, 1);
+int prefixSum = 0;
 
-    for (int x : a) {
-        result.add(x);
+for (int num : arr) {
+    prefixSum += num;
+    if (prefixCount.containsKey(prefixSum - target)) {
+        // count += prefixCount.get(prefixSum - target)
     }
-
-    for (int x : b) {
-        result.add(x);
-    }
-
-    return result;
+    prefixCount.put(prefixSum, prefixCount.getOrDefault(prefixSum, 0) + 1);
 }
 ```
 
-## 10.3 Longest consecutive sequence
+### 9.4 Sliding window + HashMap
+
+Substring problems me window me character counts track karte hain:
 
 ```java
-public static int longestConsecutive(int[] nums) {
-    java.util.Set<Integer> set = new java.util.HashSet<>();
-    for (int num : nums) {
-        set.add(num);
-    }
-
-    int longest = 0;
-
-    for (int num : set) {
-        if (!set.contains(num - 1)) {
-            int current = num;
-            int length = 1;
-
-            while (set.contains(current + 1)) {
-                current++;
-                length++;
-            }
-
-            longest = Math.max(longest, length);
-        }
-    }
-
-    return longest;
-}
+Map<Character, Integer> window = new HashMap<>();
+// window me har character ki frequency maintain karo
+// left aur right pointers se window slide karo
 ```
 
-## 10.4 Subarray sum equals k
+---
 
-```java
-public static int subarraySum(int[] nums, int k) {
-    java.util.Map<Integer, Integer> map = new java.util.HashMap<>();
-    map.put(0, 1);
+## 10. Time complexity summary
 
-    int sum = 0;
-    int count = 0;
+| Operation | HashMap | HashSet | TreeMap |
+|---|---|---|---|
+| Insert | `O(1)` avg | `O(1)` avg | `O(log n)` |
+| Delete | `O(1)` avg | `O(1)` avg | `O(log n)` |
+| Search | `O(1)` avg | `O(1)` avg | `O(log n)` |
+| Contains | `O(1)` avg | `O(1)` avg | `O(log n)` |
 
-    for (int num : nums) {
-        sum += num;
-        if (map.containsKey(sum - k)) {
-            count += map.get(sum - k);
-        }
-        map.put(sum, map.getOrDefault(sum, 0) + 1);
-    }
+| Algorithm pattern | Complexity |
+|---|---|
+| Frequency count | `O(n)` |
+| Two sum | `O(n)` |
+| Longest consecutive sequence | `O(n)` average |
+| Group anagrams | `O(n * k log k)` |
+| Subarray sum equals k | `O(n)` |
+| Sliding window + hashmap | `O(n)` |
 
-    return count;
-}
-```
-
-## 10.5 Group anagrams together
-
-```java
-public static java.util.List<java.util.List<String>> groupAnagrams(String[] strs) {
-    java.util.Map<String, java.util.List<String>> map = new java.util.HashMap<>();
-
-    for (String str : strs) {
-        char[] chars = str.toCharArray();
-        java.util.Arrays.sort(chars);
-        String key = new String(chars);
-
-        map.computeIfAbsent(key, k -> new java.util.ArrayList<>()).add(str);
-    }
-
-    return new java.util.ArrayList<>(map.values());
-}
-```
-
-## 10.6 Find all duplicates in array
-
-```java
-public static java.util.List<Integer> findDuplicates(int[] nums) {
-    java.util.Set<Integer> seen = new java.util.HashSet<>();
-    java.util.List<Integer> duplicates = new java.util.ArrayList<>();
-
-    for (int num : nums) {
-        if (!seen.add(num)) {
-            duplicates.add(num);
-        }
-    }
-
-    return duplicates;
-}
-```
-
-## 10.7 First recurring character
-
-```java
-public static Character firstRecurringCharacter(String s) {
-    java.util.Set<Character> seen = new java.util.HashSet<>();
-
-    for (char ch : s.toCharArray()) {
-        if (seen.contains(ch)) {
-            return ch;
-        }
-        seen.add(ch);
-    }
-
-    return null;
-}
-```
-
-## 10.8 4Sum problem
-
-```java
-public static java.util.List<java.util.List<Integer>> fourSum(int[] nums, int target) {
-    java.util.List<java.util.List<Integer>> result = new java.util.ArrayList<>();
-    java.util.Arrays.sort(nums);
-    int n = nums.length;
-
-    for (int i = 0; i < n - 3; i++) {
-        if (i > 0 && nums[i] == nums[i - 1]) continue;
-
-        for (int j = i + 1; j < n - 2; j++) {
-            if (j > i + 1 && nums[j] == nums[j - 1]) continue;
-
-            int left = j + 1;
-            int right = n - 1;
-
-            while (left < right) {
-                long sum = 1L * nums[i] + nums[j] + nums[left] + nums[right];
-
-                if (sum == target) {
-                    result.add(java.util.Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
-                    left++;
-                    right--;
-
-                    while (left < right && nums[left] == nums[left - 1]) left++;
-                    while (left < right && nums[right] == nums[right + 1]) right--;
-                } else if (sum < target) {
-                    left++;
-                } else {
-                    right--;
-                }
-            }
-        }
-    }
-
-    return result;
-}
-```
-
-## 10.9 Minimum window substring
-
-Hashing + sliding window ka classic problem.
-
-```java
-public static String minWindow(String s, String t) {
-    if (s.length() < t.length()) {
-        return "";
-    }
-
-    java.util.Map<Character, Integer> need = new java.util.HashMap<>();
-    for (char ch : t.toCharArray()) {
-        need.put(ch, need.getOrDefault(ch, 0) + 1);
-    }
-
-    java.util.Map<Character, Integer> window = new java.util.HashMap<>();
-    int have = 0;
-    int needCount = need.size();
-    int left = 0;
-    int minLen = Integer.MAX_VALUE;
-    int start = 0;
-
-    for (int right = 0; right < s.length(); right++) {
-        char ch = s.charAt(right);
-        window.put(ch, window.getOrDefault(ch, 0) + 1);
-
-        if (need.containsKey(ch) && window.get(ch).intValue() == need.get(ch).intValue()) {
-            have++;
-        }
-
-        while (have == needCount) {
-            if (right - left + 1 < minLen) {
-                minLen = right - left + 1;
-                start = left;
-            }
-
-            char leftChar = s.charAt(left);
-            window.put(leftChar, window.get(leftChar) - 1);
-
-            if (need.containsKey(leftChar) && window.get(leftChar) < need.get(leftChar)) {
-                have--;
-            }
-
-            left++;
-        }
-    }
-
-    return minLen == Integer.MAX_VALUE ? "" : s.substring(start, start + minLen);
-}
-```
+---
 
 ## 11. Common mistakes in hashing
 
-- `null` handling ignore kar dena
-- `HashMap` aur `TreeMap` ka difference na samajhna
-- duplicate keys overwrite behavior bhool jana
-- hash-based solution me order assume kar lena
-- worst-case vs average-case confusion
+- `null` handling ignore kar dena — `map.get(key)` null return karta hai agar key nahi hai
+- `HashMap` aur `TreeMap` ka difference na samajhna — ordering vs speed
+- duplicate keys overwrite behavior bhool jana — `put` same key par value overwrite karta hai
+- hash-based solution me order assume kar lena — `HashMap` unordered hai
+- worst-case vs average-case confusion — average `O(1)`, worst `O(n)`
+- `get()` ko double call karna — `getOrDefault` use karke optimize karo
+- `remove()` ko `get()` se pehle validate na karna
 
-## 12. Time complexity summary
+---
 
-- `HashMap` get/put = average `O(1)`
-- `HashSet` add/contains = average `O(1)`
-- `LinkedHashMap` operations = average `O(1)`
-- `TreeMap` operations = `O(log n)`
-- frequency count = `O(n)`
-- longest consecutive sequence = `O(n)` average
-- group anagrams = depends on string sorting, often `O(n * k log k)`
-- subarray sum equals `k` = `O(n)`
+## 12. Quick revision summary
 
-## 13. Quick revision summary
-
-- hash function deterministic, uniform, and fast hona chahiye
-- `HashMap` key-value pairs store karta hai
+- Hash function deterministic, uniform, and fast hona chahiye
+- `HashMap` key-value pairs store karta hai — unordered, `O(1)` average
 - `HashSet` unique elements store karta hai
 - `LinkedHashMap` insertion order maintain karta hai
-- `TreeMap` sorted keys rakhta hai
-- collisions chaining ya open addressing se handle hoti hain
-- load factor badhne par rehashing hoti hai
-- hashing frequency counting aur lookup problems me bohot powerful hoti hai
+- `TreeMap` sorted keys rakhta hai — `O(log n)`
+- Collisions chaining se handle hoti hain Java me
+- Load factor badhne par rehashing hoti hai (default 0.75)
+- Frequency counting, two sum, prefix sum — 3 sabse important patterns
+- `getOrDefault` use karo null handling ke liye
+- Hashing + sliding window = substring problems
 
-## 14. Final takeaway
+---
 
-Hashing DSA ke sabse practical topics me se ek hai, kyunki ye bohot saare `O(n^2)` problems ko `O(n)` average tak reduce kar deta hai.
+## 13. Final takeaway
+
+Hashing DSA ke sabse practical topics me se ek hai. Ye bohot saare `O(n^2)` problems ko `O(n)` average tak reduce kar deta hai.
 
 Java interview ke liye most important practical points:
-
-- `HashMap`, `HashSet`, `LinkedHashMap`, `TreeMap`
-- collision and rehashing concepts
-- frequency count
-- two-sum / prefix sum ideas
-- grouping and caching patterns
-- hashing + sliding window combinations
+- `HashMap`, `HashSet`, `LinkedHashMap`, `TreeMap` — kab kya use karna hai
+- collision aur rehashing concepts
+- frequency count pattern
+- two-sum / complement search
+- prefix sum pattern
+- grouping (anagrams, etc.) aur caching
+- hashing + sliding window combination
