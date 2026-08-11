@@ -30,7 +30,7 @@ Current coverage:
 - Stacks
 - Queues
 - Trees
-- Hashing
+- **Hashing** ⭐ (20 unique problems, q1-q20)
 - Graphs
 - Dynamic Programming
 
@@ -48,9 +48,35 @@ DSA
 |- 8-Stacks
 |- 9-Queue
 |- 10-Tree
-|- 11-Hashing
-|- 12-Graphs
-|- 13-DP
+|- 11-Heap or Priority Queue
+|- 12-Hashing
+|- 13-Graphs
+|- 14-DP
 ```
 
+## Recent Updates
 
+- **Deduplication**: Removed 38 duplicate LeetCode questions across multiple folders
+- **12-Hashing**: Now contains exactly 20 unique Java files (q1.java through q20.java), each with distinct LeetCode problems ranging from Two Sum (#1) to Insert Delete GetRandom O(1) (#380)
+- **Clean Structure**: Each question now appears in only one folder, eliminating redundancy
+- **Total**: 241 unique .java files covering all major DSA topics
+
+## Problem Counts by Folder
+
+| Folder | Unique Java Files |
+|--------|------------------|
+| 1-JAVA Basics | 8 |
+| 2-Arrays | 33 |
+| 3-Strings | 19 |
+| 4-Searching | 22 |
+| 5-Sorting | 14 |
+| 6-Recursion | 19 |
+| 7-Linked List | 23 |
+| 8-Stacks | 18 |
+| 9-Queue | 25 |
+| 10-Tree | 38 |
+| 11-Heap | 22 |
+| 12-Hashing | **20** ⭐ |
+| 13-Graphs | Theory only |
+| 14-DP | Theory only |
+| **TOTAL** | **241** |
